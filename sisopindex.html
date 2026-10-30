@@ -1,0 +1,1828 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sisop Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f5f6f9;--surface:#ffffff;--surface2:#eef0f6;--fg:#161a26;--muted:#5b6379;--line:#d9dde8;
+  --accent:#1d4fd0;--accent-ink:#ffffff;--accent-soft:#e4ebfc;
+  --ok:#17803d;--ok-soft:#e0f3e7;--bad:#b42318;--bad-soft:#fbe7e4;--warn:#9a5b00;--warn-soft:#fdf0d6;
+  --code-bg:#12172a;--code-fg:#e3e8f7;--c-com:#7d88aa;--c-str:#9fe0a8;--c-kw:#8fb0ff;--c-pp:#e6b86a;--c-num:#f29c8f;
+  --p1:#2f6bff;--p2:#e5702a;--p3:#1f9d6b;--p4:#b04fd1;--p5:#d1a300;--p6:#d6457a;--p7:#00a3b8;--p8:#7a8199;
+  --idle:#cfd4e3;
+  --font-d:"Familjen Grotesk","IBM Plex Sans",system-ui,sans-serif;
+  --font-b:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1220;--surface:#161b2e;--surface2:#1d2338;--fg:#e8ebf5;--muted:#9aa3bd;--line:#2a3150;
+  --accent:#8fb0ff;--accent-ink:#0e1220;--accent-soft:#1f2b52;
+  --ok:#5fd18a;--ok-soft:#173326;--bad:#ff8a7c;--bad-soft:#3a1c1a;--warn:#f0b954;--warn-soft:#3a2d12;
+  --code-bg:#0a0e1c;--code-fg:#e3e8f7;
+  --p1:#6f94ff;--p2:#ff9a5c;--p3:#4cc896;--p4:#cf86ec;--p5:#ecc43a;--p6:#f27aa5;--p7:#3fd0e3;--p8:#a2a9c0;
+  --idle:#2c3352;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1220;--surface:#161b2e;--surface2:#1d2338;--fg:#e8ebf5;--muted:#9aa3bd;--line:#2a3150;
+  --accent:#8fb0ff;--accent-ink:#0e1220;--accent-soft:#1f2b52;
+  --ok:#5fd18a;--ok-soft:#173326;--bad:#ff8a7c;--bad-soft:#3a1c1a;--warn:#f0b954;--warn-soft:#3a2d12;
+  --code-bg:#0a0e1c;--code-fg:#e3e8f7;
+  --p1:#6f94ff;--p2:#ff9a5c;--p3:#4cc896;--p4:#cf86ec;--p5:#ecc43a;--p6:#f27aa5;--p7:#3fd0e3;--p8:#a2a9c0;
+  --idle:#2c3352;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 var(--font-b);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+.wrap{max-width:980px;margin:0 auto}
+h1,h2,h3{font-family:var(--font-d);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,6vw,3.2rem);font-weight:700;letter-spacing:-.02em}
+h2{font-size:1.6rem;font-weight:600;letter-spacing:-.01em;margin-top:2.4rem}
+h3{font-size:1.15rem;font-weight:600;margin-top:1.6rem}
+p{margin:.7em 0;max-width:68ch}
+a{color:var(--accent)}
+code{font-family:var(--font-m);font-size:.88em;background:var(--surface2);padding:.1em .35em;border-radius:4px}
+.eyebrow{font:500 .72rem var(--font-m);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+/* header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px))}
+.bar{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:10px 0}
+.brand{font:700 1.1rem var(--font-d);text-decoration:none;color:var(--fg);white-space:nowrap;display:flex;align-items:center;gap:8px}
+.brand i{width:12px;height:12px;border-radius:3px;background:var(--accent);display:inline-block}
+nav{display:flex;gap:4px;overflow-x:auto;flex:1;min-width:0;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav a{font:500 .85rem var(--font-b);color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:8px;white-space:nowrap}
+nav a:hover{color:var(--fg);background:var(--surface2)}
+nav a.on{color:var(--accent);background:var(--accent-soft)}
+/* cards / ui */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.topic{display:block;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s}
+.topic:hover{border-color:var(--accent);transform:translateY(-2px)}
+.topic h3{margin:.3rem 0 .2rem}
+.topic p{color:var(--muted);font-size:.92rem;margin:.2em 0}
+.tag{font:500 .7rem var(--font-m);padding:2px 8px;border-radius:99px;background:var(--surface2);color:var(--muted)}
+.tag.live{background:var(--accent-soft);color:var(--accent)}
+.tag.soon{opacity:.7}
+.btn{font:500 .88rem var(--font-b);border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:7px 13px;border-radius:9px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn:focus-visible,select:focus-visible,input:focus-visible,nav a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.callout{border-left:4px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 10px 10px 0;margin:1.1em 0}
+.callout.warn{border-color:var(--warn);background:var(--warn-soft)}
+.callout b:first-child{display:block;font:500 .72rem var(--font-m);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+.callout p{margin:.3em 0}
+table.t{border-collapse:collapse;width:100%;font-size:.92rem}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+table.t th{font:500 .72rem var(--font-m);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.scroll{overflow-x:auto;max-width:100%}
+ul.l{padding-left:1.2em;margin:.6em 0;max-width:68ch}ul.l li{margin:.3em 0}
+/* code */
+pre.code{background:var(--code-bg);color:var(--code-fg);font:400 .84rem/1.6 var(--font-m);padding:14px 16px;border-radius:12px;overflow-x:auto;max-width:100%;margin:1em 0}
+pre.code .c{color:var(--c-com)}pre.code .s{color:var(--c-str)}pre.code .k{color:var(--c-kw)}pre.code .p{color:var(--c-pp)}pre.code .n{color:var(--c-num)}
+/* gantt */
+.gantt{overflow-x:auto;padding-bottom:6px}
+.g-row{display:flex;align-items:stretch;min-width:max-content}
+.g-blk{height:42px;display:flex;align-items:center;justify-content:center;font:500 .8rem var(--font-m);color:#fff;border-right:1px solid var(--surface);min-width:0}
+.g-blk.idle{background:repeating-linear-gradient(45deg,var(--idle),var(--idle) 4px,transparent 4px,transparent 8px);color:var(--muted)}
+.g-axis{display:flex;min-width:max-content;font:400 .68rem var(--font-m);color:var(--muted);margin-top:3px}
+.g-axis span{display:block;text-align:left;border-left:1px solid var(--line);padding-left:3px;overflow:hidden}
+.g-cursor{position:relative}
+.g-cursor::after{content:"";position:absolute;top:-4px;bottom:-4px;left:var(--cx,0);width:2px;background:var(--fg);pointer-events:none}
+.pc1{background:var(--p1)}.pc2{background:var(--p2)}.pc3{background:var(--p3)}.pc4{background:var(--p4)}.pc5{background:var(--p5);color:#1a1a1a}.pc6{background:var(--p6)}.pc7{background:var(--p7);color:#10242a}.pc8{background:var(--p8);color:#10151f}
+/* simulator */
+.sim-top{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:12px}
+.fld{display:flex;flex-direction:column;gap:3px;font:500 .72rem var(--font-m);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+select,input[type=number]{font:400 .95rem var(--font-b);padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);min-width:0}
+input[type=number]{width:72px}
+select{max-width:100%}.fld{min-width:0;max-width:100%}
+input[type=text]{font:400 .95rem var(--font-m);padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);min-width:0;max-width:100%}
+details.card summary{list-style:none}details.card summary::-webkit-details-marker{display:none}details.card[open] summary{margin-bottom:8px}
+table.proc{border-collapse:collapse;width:100%;min-width:420px}
+table.proc th{font:500 .7rem var(--font-m);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:4px 6px}
+table.proc td{padding:3px 6px}
+.dot{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:6px;vertical-align:-1px}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px}
+.metric{background:var(--surface2);border-radius:10px;padding:10px 12px}
+.metric b{display:block;font:600 1.5rem var(--font-d)}
+.metric span{font:500 .68rem var(--font-m);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.scrub{width:100%;accent-color:var(--accent);margin:10px 0 4px}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;font-size:.88rem}
+.readout div{background:var(--surface2);border-radius:8px;padding:8px 10px;min-height:52px}
+.readout em{display:block;font:500 .66rem var(--font-m);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-style:normal}
+.chip{display:inline-block;padding:1px 8px;border-radius:6px;font:500 .78rem var(--font-m);color:#fff;margin:2px 2px 0 0}
+.cmp-row{display:grid;grid-template-columns:70px 1fr 54px;gap:8px;align-items:center;font:.85rem var(--font-m);margin:5px 0}
+.cmp-bar{height:12px;border-radius:6px;background:var(--surface2);overflow:hidden}
+.cmp-bar i{display:block;height:100%;background:var(--accent);border-radius:6px}
+/* state lab / race lab */
+.states{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.st{padding:8px 14px;border-radius:10px;border:2px solid var(--line);font:500 .9rem var(--font-m);background:var(--surface);color:var(--muted)}
+.st.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600}
+.trans{display:flex;flex-wrap:wrap;gap:8px}
+.reg{font:.9rem var(--font-m);background:var(--surface2);border-radius:10px;padding:10px 12px}
+.race{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.race{grid-template-columns:1fr}}
+.race .th{border:1px solid var(--line);border-radius:10px;padding:10px;font:.85rem var(--font-m);min-width:0}
+.race .th .ln{padding:3px 6px;border-radius:5px;color:var(--muted)}
+.race .th .ln.cur{background:var(--accent-soft);color:var(--accent);font-weight:500}
+.big{font:700 2rem var(--font-d)}
+/* quiz */
+.q{margin:14px 0}
+.q .opts{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.q .opt{text-align:left;font:.95rem var(--font-b);padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--fg);cursor:pointer}
+.q .opt:hover:not(:disabled){border-color:var(--accent)}
+.q .opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.q .opt.bad{border-color:var(--bad);background:var(--bad-soft)}
+.q .why{font-size:.9rem;color:var(--muted);margin-top:6px}
+.hero{padding:44px 0 10px}
+.hero p.lead{font-size:1.15rem;color:var(--muted);max-width:56ch}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.spacer{height:18px}
+footer{margin-top:56px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head><body>
+<header class="top"><div class="bar">
+  <a class="brand" href="#inicio"><i></i>Sisop Lab</a>
+  <nav id="nav">
+    <a href="#inicio" data-nav="inicio">Início</a>
+    <a href="#intro" data-nav="intro">1 · Introdução</a>
+    <a href="#processos" data-nav="processos">2 · Processos</a>
+    <a href="#escalonamento" data-nav="escalonamento">2 · Escalonamento</a>
+    <a href="#simulador" data-nav="simulador">2 · Simulador</a>
+    <a href="#threads" data-nav="threads">3 · Threads</a>
+    <a href="#sincronizacao" data-nav="sincronizacao">3 · Sincronização</a>
+    <a href="#ipc" data-nav="ipc">3 · IPC</a>
+    <a href="#deadlock" data-nav="deadlock">4 · Deadlock</a>
+    <a href="#memoria" data-nav="memoria">5 · Memória</a>
+    <a href="#arquivos" data-nav="arquivos">6 · Arquivos</a>
+    <a href="#es" data-nav="es">7 · E/S</a>
+    <a href="#teste" data-nav="teste">Teste-se</a>
+  </nav>
+</div></header>
+<main class="wrap">
+
+<!-- ============ INÍCIO ============ -->
+<section id="v-inicio" data-view="inicio">
+  <div class="hero">
+    <div class="eyebrow">Sistemas Operacionais · guia de estudo</div>
+    <h1 style="margin-top:.5rem">Entenda o que o SO faz <br>por baixo do capô.</h1>
+    <p class="lead">Resumos enxutos, simuladores que você pode mexer e questões para testar o que ficou. Montado em cima dos slides da disciplina, com a terminologia do Silberschatz.</p>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="eyebrow">Demonstração · efeito comboio</div>
+    <h3 style="margin-top:.3rem">Os mesmos três processos, duas ordens de execução</h3>
+    <p style="color:var(--muted)">P1 dura 24, P2 e P3 duram 3 cada; todos chegam em t=0. Veja o que a ordem faz com o tempo médio de espera.</p>
+    <div id="convoy"></div>
+    <p style="margin-bottom:0"><a href="#simulador" class="btn pri" style="text-decoration:none;display:inline-block">Abrir o simulador completo →</a></p>
+  </div>
+
+  <h2>Plano de ensino, na ordem</h2>
+  <p style="color:var(--muted)">Prof. Fabiano Hessel · 2026/02. <b>P1</b> cobre as unidades 1 a 4; <b>P2</b> cobre as unidades 5 a 7; <b>TP</b> são os trabalhos práticos. G1 = 0,35·P1 + 0,35·P2 + 0,3·TP.</p>
+  <div class="grid" style="margin-top:12px">
+    <a class="card topic" href="#intro"><span class="tag live">Unidade 1 · P1</span><h3>Introdução</h3><p>Evolução, estrutura, serviços, chamadas de sistema, exemplos reais.</p></a>
+    <a class="card topic" href="#processos"><span class="tag live">Unidade 2 · P1</span><h3>Gerência do processador</h3><p>Processos, estados, fork/exec/wait, escalonamento e simulador.</p><p>Inclui o <b>simulador</b> de escalonamento.</p></a>
+    <a class="card topic" href="#threads"><span class="tag live">Unidade 3 · P1</span><h3>Programação concorrente</h3><p>Threads, sincronização, problemas clássicos (sete exercícios), IPC.</p></a>
+    <a class="card topic" href="#deadlock"><span class="tag live">Unidade 4 · P1</span><h3>Deadlock</h3><p>Condições necessárias, prevenção, algoritmo do banqueiro, detecção e recuperação.</p></a>
+    <a class="card topic" href="#memoria"><span class="tag live">Unidade 5 · P2</span><h3>Gerência de memória</h3><p>Partições, paginação, memória virtual, disco e NVM, com laboratórios.</p></a>
+    <a class="card topic" href="#arquivos"><span class="tag live">Unidade 6 · P2</span><h3>Gerência de arquivos</h3><p>Arquivos, diretórios, alocação, i-node, proteção.</p></a>
+    <a class="card topic" href="#es"><span class="tag live">Unidade 7 · P2</span><h3>Gerência de E/S</h3><p>Hardware, polling, interrupção, DMA, drivers, subsistema do kernel.</p></a>
+    <a class="card topic" href="#teste"><span class="tag live">quiz</span><h3>Teste-se</h3><p>Questões na ordem das unidades.</p></a>
+  </div>
+  </section>
+
+
+<!-- ============ UNIDADE 1: INTRODUÇÃO ============ -->
+<section id="v-intro" data-view="intro" hidden>
+  <div class="spacer"></div>
+  <div class="eyebrow">Unidade 1 · Silberschatz caps. 1–2 · aulas 1–5</div>
+  <h1 style="font-size:2.2rem;margin-top:.3rem">Introdução aos sistemas operacionais</h1>
+  <p>Um <b>sistema operacional</b> é um programa que faz a intermediação entre o usuário e o hardware. Seus objetivos: executar programas do usuário, tornar o computador conveniente de usar e usar o hardware de forma eficiente. Não existe definição universal; a mais prática é: o <b>kernel</b> é o único programa que roda o tempo todo; o resto é <i>programa de sistema</i> (vem com o SO) ou <i>aplicação</i>. SOs de uso geral e móveis também trazem <i>middleware</i> (bancos de dados, multimídia, gráficos).</p>
+
+  <h2>1.1 Evolução histórica</h2>
+  <div class="grid">
+    <div class="card"><h3 style="margin-top:0">Lote (batch)</h3><p>Um usuário sozinho não mantém CPU e E/S sempre ocupadas. Jobs são agrupados e executados em sequência.</p></div>
+    <div class="card"><h3 style="margin-top:0">Multiprogramação</h3><p>Vários jobs na memória; quando um espera E/S, o SO troca para outro. A CPU sempre tem algo a executar. Aqui surge o <b>escalonamento de jobs</b>.</p></div>
+    <div class="card"><h3 style="margin-top:0">Tempo compartilhado (multitarefa)</h3><p>A CPU troca tão rápido que o usuário interage com cada programa. Resposta &lt; 1 s. Traz escalonamento de CPU, <i>swapping</i> e memória virtual.</p></div>
+  </div>
+
+  <h2>Organização do computador e interrupções</h2>
+  <p>CPUs e controladores de dispositivos ligam-se por um barramento à memória compartilhada e executam <b>concorrentemente</b>. Cada controlador tem um buffer local e um <i>device driver</i> no SO. Quando termina, o controlador avisa a CPU por uma <b>interrupção</b>. O SO é <i>dirigido por interrupções</i>.</p>
+  <div class="card">
+    <div class="eyebrow">Ciclo de E/S por interrupção · passo <span id="io-n">1</span> de 7</div>
+    <p id="io-t" style="font-size:1.05rem;margin:.5rem 0;min-height:3.2em"></p>
+    <div class="row"><button class="btn" id="io-p">← Anterior</button><button class="btn pri" id="io-nx">Próximo →</button></div>
+  </div>
+  <ul class="l">
+    <li><b>Vetor de interrupções</b>: tabela com o endereço de cada rotina de tratamento. O hardware salva o endereço da instrução interrompida; o SO salva registradores e PC.</li>
+    <li><b>Trap/exceção</b>: interrupção gerada por software, por erro (divisão por zero) ou pedido do usuário (chamada de sistema).</li>
+    <li><b>DMA</b>: para E/S rápida, o controlador transfere blocos direto à memória; gera <i>uma</i> interrupção por bloco, e não uma por byte.</li>
+  </ul>
+
+  <h2>Proteção: modo dual e timer</h2>
+  <div class="grid">
+    <div class="card"><h3 style="margin-top:0">Modo usuário × kernel</h3><p>Um <b>bit de modo</b> no hardware distingue código de usuário de código do kernel. <b>Instruções privilegiadas</b> só executam em modo kernel. A chamada de sistema muda para kernel; o retorno volta a usuário. Assim o usuário não consegue "se promover" sozinho.</p></div>
+    <div class="card"><h3 style="margin-top:0">Timer</h3><p>O SO programa (instrução privilegiada) um contador que decrementa com o relógio; ao zerar, gera interrupção. Evita laço infinito e garante que o SO <b>retome o controle</b> da CPU antes de escalonar um processo.</p></div>
+  </div>
+
+  <h2>1.2 Estrutura dos sistemas operacionais</h2>
+  <div class="scroll"><table class="t">
+    <tr><th>Estrutura</th><th>Ideia</th><th>Vantagem</th><th>Desvantagem</th><th>Exemplo</th></tr>
+    <tr><td>Monolítica</td><td>Todo o kernel em um binário, um espaço de endereços</td><td>Rápida (chamada de função)</td><td>Fortemente acoplada; mudança propaga</td><td>UNIX original</td></tr>
+    <tr><td>Em camadas</td><td>Camada 0 = hardware … camada N = interface; cada uma usa só as de baixo</td><td>Modular, fácil depurar</td><td>Difícil definir camadas; overhead de atravessá-las</td><td>Poucas camadas nos SOs atuais</td></tr>
+    <tr><td>Microkernel</td><td>Só o essencial no kernel; resto em espaço de usuário, comunicando por mensagens</td><td>Fácil estender e portar; mais confiável e seguro</td><td>Overhead de troca usuário↔kernel</td><td>Mach (base do Darwin)</td></tr>
+    <tr><td>Módulos (LKM)</td><td>Componentes carregáveis em tempo de execução por interfaces conhecidas</td><td>Flexível, sem recompilar o kernel</td><td>—</td><td>Linux, Solaris</td></tr>
+    <tr><td>Híbrida</td><td>Mistura das anteriores</td><td>Equilibra desempenho e flexibilidade</td><td>—</td><td>Linux (monolítico + módulos), Windows, macOS</td></tr>
+  </table></div>
+  <div class="callout"><b>Política × mecanismo</b><p><i>Política</i> é <b>o que</b> fazer ("interromper a cada 100 s"); <i>mecanismo</i> é <b>como</b> ("o timer"). Separá-los permite mudar a política (100 → 200) sem mexer no mecanismo.</p></div>
+
+  <h2>1.3 Serviços do sistema operacional</h2>
+  <p>Serviços úteis ao usuário e ao programador:</p>
+  <ul class="l"><li><b>Interface com o usuário</b>: linha de comando (shell), gráfica (GUI), toque, batch.</li><li><b>Execução de programas</b>: carregar na memória, rodar e terminar (normal ou com erro).</li><li><b>Operações de E/S</b> e <b>manipulação do sistema de arquivos</b>.</li><li><b>Comunicação</b> entre processos: memória compartilhada ou troca de mensagens.</li><li><b>Detecção de erros</b> em CPU, memória, dispositivos e programas.</li></ul>
+  <p>Há ainda serviços para o funcionamento eficiente do próprio sistema: alocação de recursos, contabilidade e proteção/segurança. <b>Proteção</b> controla o acesso a recursos definidos pelo SO; <b>segurança</b> defende o sistema de ataques internos e externos.</p>
+  <h3>O shell por dentro</h3>
+  <p>O interpretador de comandos busca um comando e o executa. Se o comando é um programa externo, o shell só usa o nome para achar o arquivo: <b>não precisa ser modificado</b> para ganhar comandos novos. Fluxo: o shell chama <code>fork()</code> para criar o processo e <code>exec()</code> para carregar o programa nele; depois <code>wait()</code> ou segue aceitando comandos.</p>
+
+  <h2>1.4 Chamadas de sistema</h2>
+  <p>É a interface de programação para os serviços do SO. Os programas normalmente usam uma <b>API</b> (Win32, POSIX, Java), e não a chamada diretamente; a biblioteca de execução traduz a chamada da API na chamada de sistema correspondente. Cada chamada tem um <b>número</b>, e o kernel mantém uma tabela indexada por ele.</p>
+  <pre class="code" id="c-sys"></pre>
+  <p style="color:var(--muted);font-size:.92rem">Não confunda: <code>printf()</code> é função da biblioteca C (formata e chama <code>write()</code>); <code>write()</code> é a chamada de sistema que muda para modo kernel.</p>
+  <h3>Passagem de parâmetros</h3>
+  <ul class="l"><li>Em <b>registradores</b> (simples, mas podem faltar registradores).</li><li>Em um <b>bloco/tabela na memória</b>, passando só o endereço em um registrador (Linux e Solaris).</li><li>Na <b>pilha</b>, empilhados pelo programa e desempilhados pelo SO. Bloco e pilha não limitam o número de parâmetros.</li></ul>
+  <h3>Tipos de chamadas</h3>
+  <div class="grid">
+    <div class="card"><b>Controle de processos</b><p style="font-size:.9rem;color:var(--muted)">criar/terminar, load/execute, esperar evento, alocar memória, locks</p></div>
+    <div class="card"><b>Arquivos</b><p style="font-size:.9rem;color:var(--muted)">create, delete, open, close, read, write, reposition, atributos</p></div>
+    <div class="card"><b>Dispositivos</b><p style="font-size:.9rem;color:var(--muted)">request/release, read, write, atributos, attach/detach</p></div>
+    <div class="card"><b>Informação</b><p style="font-size:.9rem;color:var(--muted)">data e hora, dados do sistema, atributos de processo/arquivo</p></div>
+    <div class="card"><b>Comunicação</b><p style="font-size:.9rem;color:var(--muted)">criar conexão, send/receive, memória compartilhada</p></div>
+    <div class="card"><b>Proteção</b><p style="font-size:.9rem;color:var(--muted)">permissões, permitir e negar acesso</p></div>
+  </div>
+  <h3>Ligadores e carregadores</h3>
+  <p>O código-fonte vira <i>objeto relocável</i>; o <b>linker</b> junta objetos e bibliotecas em um executável; o <b>loader</b> o traz à memória e faz a <i>relocação</i> (endereços finais). Formatos: <b>ELF</b> (Unix/Linux), <b>PE</b> (Windows), <b>Mach-O</b> (macOS). Bibliotecas dinâmicas (DLL, <code>.so</code>) são carregadas sob demanda e compartilhadas.</p>
+  <div class="callout warn"><b>Por que um app não roda em outro SO?</b><p>Cada SO tem suas chamadas de sistema e formato de arquivo; o equivalente de API em nível binário é a <b>ABI</b>. Portabilidade vem de linguagem interpretada (Python), de VM (Java) ou de recompilar o mesmo código C em cada SO.</p></div>
+
+  <h2>1.5 Exemplos reais</h2>
+  <div class="scroll"><table class="t">
+    <tr><th>Sistema</th><th>Características</th></tr>
+    <tr><td>Arduino</td><td>Sem SO, monotarefa, um espaço de memória. O programa (sketch) vai à flash por USB; um boot loader o carrega.</td></tr>
+    <tr><td>FreeBSD</td><td>Variante UNIX multitarefa. O shell faz <code>fork()</code> e <code>exec()</code>; o processo termina com <code>exit</code>: código 0 = sem erro, &gt; 0 = erro.</td></tr>
+    <tr><td>Linux</td><td>Monolítico (tudo em modo kernel, um espaço de endereços) mais modular (LKM). Código aberto (GPL).</td></tr>
+    <tr><td>Windows</td><td>Majoritariamente monolítico, com microkernel para "personalidades" de subsistema.</td></tr>
+    <tr><td>macOS / iOS</td><td>Híbrido em camadas: microkernel Mach + partes do BSD UNIX + I/O Kit + extensões do kernel.</td></tr>
+  </table></div>
+  <h3>Ambientes de computação e arquiteturas</h3>
+  <ul class="l"><li><b>Multiprocessadores</b>: mais vazão, economia de escala, confiabilidade (degradação graciosa). <b>SMP</b>: todos os processadores fazem todas as tarefas; <b>assimétrico</b>: cada um tem tarefa específica. Também NUMA e multicore.</li><li><b>Virtualização</b>: o VMM permite rodar SOs convidados sobre um hospedeiro.</li><li><b>Tempo real</b>: restrições de tempo fixas; a operação só está correta se elas forem cumpridas.</li><li>Outros: cliente-servidor, P2P, nuvem, móvel, embarcado.</li></ul>
+  <div class="callout"><b>Leitura</b><p>Silberschatz et al., cap. 1 (visão geral) e cap. 2 (serviços, chamadas, estrutura). O <i>estudo dirigido</i> da disciplina usa os exercícios do cap. 1.</p></div>
+</section>
+
+<!-- ============ PROCESSOS ============ -->
+<section id="v-processos" data-view="processos" hidden>
+  <div class="spacer"></div>
+  <div class="eyebrow">Unidade 2 · 2.1 · Silberschatz cap. 3 · aulas 4–7</div>
+  <h1 style="font-size:2.2rem;margin-top:.3rem">Processos</h1>
+  <p><b>Programa</b> é uma entidade passiva (um arquivo executável em disco). <b>Processo</b> é um programa em execução: entidade ativa, com contador de programa, registradores, pilha, heap, seção de dados e texto.</p>
+
+  <h2>Estados de um processo</h2>
+  <p>Clique nas transições e veja o processo andar pelo diagrama. Só aparecem as transições válidas a partir do estado atual.</p>
+  <div class="card">
+    <div class="states" id="st-row"></div>
+    <div class="trans" id="st-trans"></div>
+    <p id="st-msg" style="color:var(--muted);font-size:.92rem;margin-bottom:0"></p>
+  </div>
+  <div class="callout"><b>PCB</b><p>Cada processo é representado no SO por um <i>Process Control Block</i> (no Linux, <code>task_struct</code>): estado, PC, registradores, informações de escalonamento, memória, E/S. É o que a <b>troca de contexto</b> salva e restaura. A troca é puro overhead: durante ela, nenhum processo do usuário avança.</p></div>
+
+  <h2>Criação e término</h2>
+  <pre class="code" id="c-fork"></pre>
+  <ul class="l">
+    <li><code>fork()</code> devolve <b>0 no filho</b> e o <b>PID do filho no pai</b>; pai e filho executam o mesmo código a partir dali.</li>
+    <li><code>exec()</code> substitui a imagem do processo por outro programa. <code>wait()</code> bloqueia o pai até um filho terminar.</li>
+    <li><b>Zumbi</b>: filho terminou, mas o pai ainda não chamou <code>wait()</code>; a entrada na tabela de processos permanece. <b>Órfão</b>: o pai terminou antes do filho; o <code>init</code> adota.</li>
+  </ul>
+  <div class="callout warn"><b>Pegadinha clássica</b><p>Um laço <code>for (i=0;i&lt;n;i++) fork();</code> cria 2<sup>n</sup> − 1 filhos (2<sup>n</sup> processos no total), porque os filhos também continuam o laço. Para uma cadeia, o filho precisa sair do laço (<code>break</code>); para uma árvore rasa, é o pai que cria e o filho sai.</p></div>
+
+  
+  <h2>Exercícios do professor: fork, exec e wait</h2>
+  <p>Os códigos abaixo são os da pasta de exercícios (ex1 a ex8). Antes de abrir cada um, tente prever a saída. Compile com <code>gcc exN.c -o exN</code>.</p>
+  <div id="ex-proc"></div>
+  <h3>Laboratório: quantos processos o laço cria?</h3>
+  <p>Escolha o programa e <i>n</i>. A lista mostra, para cada processo, o que o <code>fprintf</code> imprime (<code>i</code>, pid, pai e filho). O pid real muda a cada execução; aqui os processos se chamam P0, P1...</p>
+  <div class="card">
+    <div class="sim-top">
+      <label class="fld">Programa<select id="fk-prog">
+        <option value="chain">ex4: if (childpid = fork()) break; (cadeia)</option>
+        <option value="fan">ex5: if ((childpid = fork()) &lt;= 0) break; (leque)</option>
+        <option value="fanwait">ex6: igual ao ex5, com wait no pai</option>
+        <option value="all">for (i&lt;n) fork(); sem break</option></select></label>
+      <label class="fld">n<input type="number" id="fk-n" min="1" max="6" value="4"></label>
+    </div>
+    <div class="metrics" id="fk-met"></div>
+    <div class="scroll"><table class="t" id="fk-tab"></table></div>
+    <p id="fk-note" style="color:var(--muted);font-size:.9rem;margin-bottom:0"></p>
+  </div>
+</section>
+
+<!-- ============ ESCALONAMENTO ============ -->
+<section id="v-escalonamento" data-view="escalonamento" hidden>
+  <div class="spacer"></div>
+  <div class="eyebrow">Unidade 2 · 2.2 e 2.3 · Silberschatz cap. 5 · aulas 6–7</div>
+  <h1 style="font-size:2.2rem;margin-top:.3rem">Escalonamento de CPU</h1>
+  <p>O <b>escalonador</b> escolhe, entre os processos prontos, qual vai usar a CPU. O <b>despachador</b> (dispatcher) entrega a CPU ao escolhido: troca de contexto, volta ao modo usuário e salto ao ponto certo. O tempo que ele gasta é a <i>latência de despacho</i>.</p>
+  <h3>Quando o escalonador é chamado</h3>
+  <ol class="l"><li>Executando → esperando (pedido de E/S)</li><li>Executando → pronto (interrupção)</li><li>Esperando → pronto (E/S terminou)</li><li>Terminação</li></ol>
+  <p>Se só 1 e 4 ocorrem, o escalonamento é <b>não preemptivo</b>; se 2 e 3 também, é <b>preemptivo</b> (e exige cuidado com dados compartilhados).</p>
+
+  <h2>Critérios</h2>
+  <div class="scroll"><table class="t">
+    <tr><th>Métrica</th><th>Definição</th><th>Quer-se</th></tr>
+    <tr><td>Utilização de CPU</td><td>% do tempo em que a CPU está ocupada</td><td>maximizar</td></tr>
+    <tr><td>Vazão (throughput)</td><td>processos concluídos por unidade de tempo</td><td>maximizar</td></tr>
+    <tr><td>Turnaround</td><td>término − chegada</td><td>minimizar</td></tr>
+    <tr><td>Espera</td><td>tempo total na fila de prontos = turnaround − burst</td><td>minimizar</td></tr>
+    <tr><td>Resposta</td><td>primeira execução − chegada</td><td>minimizar</td></tr>
+  </table></div>
+
+  <h2>Algoritmos</h2>
+  <div class="grid">
+    <div class="card"><h3 style="margin-top:0">FCFS</h3><p>Fila simples, não preemptivo. Sofre do <b>efeito comboio</b>: processos curtos esperam atrás de um longo.</p></div>
+    <div class="card"><h3 style="margin-top:0">SJF / SRTF</h3><p>Menor próximo burst primeiro. É <b>ótimo</b> no tempo médio de espera. SRTF é a versão preemptiva. O difícil é prever o burst; causa starvation de jobs longos.</p></div>
+    <div class="card"><h3 style="margin-top:0">Round Robin</h3><p>Cada processo recebe um <b>quantum</b> <i>q</i>. Com <i>n</i> processos, ninguém espera mais que (n−1)·q. Se <i>q</i> é enorme vira FCFS; se é minúsculo, a troca de contexto domina.</p></div>
+    <div class="card"><h3 style="margin-top:0">Prioridades</h3><p>Menor número = maior prioridade (convenção dos slides). Risco de <b>starvation</b>; remédio: <b>aging</b>. Pode ser combinada com RR entre prioridades iguais.</p></div>
+  </div>
+
+  <h2>Exemplo para fazer à mão</h2>
+  <p>Três processos chegam em t=0 com bursts 24, 3 e 3 (ordem P1, P2, P3). No FCFS a espera é 0, 24 e 27, média 17. Na ordem P2, P3, P1 é 0, 3 e 6, média 3. Tente prever antes de abrir o simulador:</p>
+  <p><a class="btn pri" style="text-decoration:none;display:inline-block" href="#simulador">Testar no simulador</a></p>
+  <div class="callout"><b>Convenção de Gantt</b><p>Alguns slides mostram o Round Robin dividido por fatias de quantum, outros juntam fatias consecutivas do mesmo processo. O simulador mostra cada fatia do RR separada e junta blocos contínuos nos demais algoritmos.</p></div>
+</section>
+
+<!-- ============ SIMULADOR ============ -->
+<section id="v-simulador" data-view="simulador" hidden>
+  <div class="spacer"></div>
+  <div class="eyebrow">Unidade 2 · laboratório</div>
+  <h1 style="font-size:2.2rem;margin-top:.3rem">Simulador de escalonamento</h1>
+  <p>Edite chegada, burst e prioridade, escolha o algoritmo e arraste a linha do tempo. Os exemplos dos slides estão em <i>Exemplos</i>.</p>
+  <div class="card">
+    <div class="sim-top">
+      <label class="fld">Algoritmo<select id="s-algo"></select></label>
+      <label class="fld" id="s-qwrap">Quantum<input type="number" id="s-q" min="1" max="20" value="4"></label>
+      <label class="fld">Exemplos<select id="s-preset"></select></label>
+      <button class="btn" id="s-add">+ processo</button>
+      <button class="btn" id="s-del">− processo</button>
+    </div>
+    <div class="scroll"><table class="proc"><thead><tr><th>Proc</th><th>Chegada</th><th>Burst</th><th>Prio</th></tr></thead><tbody id="s-rows"></tbody></table></div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="eyebrow">Diagrama de Gantt</div>
+    <div class="gantt"><div id="s-gantt"></div></div>
+    <input type="range" class="scrub" id="s-scrub" min="0" max="1" value="0" aria-label="Linha do tempo">
+    <div class="readout" id="s-read"></div>
+    <div class="metrics" id="s-metrics"></div>
+    <div class="scroll" style="margin-top:12px"><table class="t" id="s-table"></table></div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="eyebrow">Comparação · mesmo conjunto de processos</div>
+    <div class="row" style="gap:20px;align-items:flex-start;margin-top:6px">
+      <div style="flex:1;min-width:230px"><b style="font-size:.85rem">Espera média</b><div id="cmp-w"></div></div>
+      <div style="flex:1;min-width:230px"><b style="font-size:.85rem">Turnaround médio</b><div id="cmp-t"></div></div>
+      <div style="flex:1;min-width:230px"><b style="font-size:.85rem">Resposta média</b><div id="cmp-r"></div></div>
+    </div>
+    <p style="color:var(--muted);font-size:.85rem;margin-bottom:0">Quantum do RR e do Prioridade+RR vem do campo acima. Prioridade: menor número = maior prioridade.</p>
+  </div>
+</section>
+
+<!-- ============ THREADS ============ -->
+<section id="v-threads" data-view="threads" hidden>
+  <div class="spacer"></div>
+  <div class="eyebrow">Unidade 3 · 3.1 · Silberschatz cap. 4 · Costa (Pthreads) · aulas 8–9</div>
+  <h1 style="font-size:2.2rem;margin-top:.3rem">Threads</h1>
+  <p>Uma <b>thread</b> é a unidade básica de uso da CPU. Um processo tradicional tem uma só; um processo multithread tem vários fluxos de execução dentro do mesmo espaço de endereçamento.</p>
+  <div class="grid" style="margin:14px 0">
+    <div class="card"><div class="eyebrow">Compartilhado</div><ul class="l"><li>Código (texto)</li><li>Dados globais e heap</li><li>Arquivos abertos</li></ul></div>
+    <div class="card"><div class="eyebrow">Privado de cada thread</div><ul class="l"><li>ID da thread</li><li>Contador de programa e registradores</li><li>Pilha (stack)</li></ul></div>
+  </div>
+  <p><b>Benefícios</b> (Silberschatz): responsividade, compartilhamento de recursos, economia (criar e trocar thread é mais barato que processo) e escalabilidade em multiprocessadores.</p>
+  <div class="callout warn"><b>Não confunda</b><p><b>Concorrência</b> = várias tarefas progredindo, mesmo que intercaladas em um núcleo só. <b>Paralelismo</b> = várias tarefas executando literalmente ao mesmo tempo, o que exige mais de um núcleo.</p></div>
+
+  <h2>Threads de usuário × de kernel</h2>
+  <div class="scroll"><table class="t">
+    <tr><th>Modelo</th><th>Mapeamento</th><th>Ponto forte</th><th>Ponto fraco</th></tr>
+    <tr><td>Muitos-para-um</td><td>N usuário → 1 kernel</td><td>Gerência barata</td><td>Uma chamada bloqueante trava tudo; sem paralelismo</td></tr>
+    <tr><td>Um-para-um</td><td>1 usuário → 1 kernel</td><td>Concorrência real, não trava tudo</td><td>Custo de criar thread de kernel (Linux, Windows)</td></tr>
+    <tr><td>Muitos-para-muitos</td><td>N usuário → M kernel (M ≤ N)</td><td>Flexível</td><td>Complexo de implementar</td></tr>
+    <tr><td>Dois níveis</td><td>M:N + opção de ligar uma thread a uma de kernel</td><td>Mistura dos dois</td><td>Complexidade</td></tr>
+  </table></div>
+
+  <h2>Pthreads em C</h2>
+  <p>Compile com <code>gcc soma.c -o soma -lpthread</code>.</p>
+  <pre class="code" id="c-pth"></pre>
+  <div class="callout warn"><b>Armadilha</b><p>Se dentro de <code>runner</code> você declarar uma variável local também chamada <code>soma</code>, ela <i>sombreia</i> a global: a thread soma na cópia local e o <code>main</code> imprime 0. Erro de escopo, não de threads.</p></div>
+  <ul class="l">
+    <li><code>pthread_create(&amp;tid, &amp;attr, funcao, arg)</code> cria a thread; <code>pthread_join(tid, NULL)</code> espera ela terminar.</li>
+    <li>Passe argumentos por ponteiro e garanta que a memória apontada viva até a thread ler (cuidado com variável de laço!).</li>
+  </ul>
+
+  <h2>Exercícios do professor: Pthreads</h2>
+  <p>Códigos da pasta <code>ex_threads</code> (ex1 a ex5). Compile com <code>gcc exN.c -o exN -lpthread</code>.</p>
+  <div id="ex-thr"></div>
+</section>
+<!-- ============ SINCRONIZAÇÃO ============ -->
+<section id="v-sincronizacao" data-view="sincronizacao" hidden>
+  <div class="spacer"></div>
+  <div class="eyebrow">Unidade 3 · 3.2 a 3.4 · Silberschatz caps. 5–6 · Costa · aulas 10–13</div>
+  <h1 style="font-size:2.2rem;margin-top:.3rem">Sincronização</h1>
+  <p>Quando threads ou processos cooperam sobre dados compartilhados, o resultado pode depender da ordem em que as instruções se intercalam. Isso é uma <b>condição de corrida</b>.</p>
+
+  <h2>Laboratório: counter++ em duas threads</h2>
+  <p><code>counter++</code> vira três instruções de máquina. Escolha quem executa a cada passo e tente chegar a um resultado errado. Começa com <code>counter = 5</code>; uma thread incrementa e a outra decrementa.</p>
+  <div class="card">
+    <div class="race">
+      <div class="th"><b>Thread A · counter++</b><div id="rl-a"></div><div class="reg" style="margin-top:8px" id="rg-a"></div></div>
+      <div class="th"><b>Thread B · counter--</b><div id="rl-b"></div><div class="reg" style="margin-top:8px" id="rg-b"></div></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn pri" id="rl-sa">Passo de A</button>
+      <button class="btn pri" id="rl-sb">Passo de B</button>
+      <button class="btn" id="rl-rnd">Aleatório</button>
+      <button class="btn" id="rl-rst">Reiniciar</button>
+    </div>
+    <p style="margin-bottom:0">Memória: <span class="big" id="rl-mem">5</span> <span id="rl-verdict" style="color:var(--muted)"></span></p>
+  </div>
+  <div class="callout"><b>Dica</b><p>Faça A ler, depois B ler e B gravar, depois A gravar: o decremento de B some. A resposta correta seria 5.</p></div>
+
+  <h2>O problema da seção crítica</h2>
+  <p>Uma solução correta precisa garantir três coisas:</p>
+  <ul class="l"><li><b>Exclusão mútua</b>: só um processo na seção crítica por vez.</li><li><b>Progresso</b>: se ninguém está dentro, a escolha de quem entra cabe apenas a quem quer entrar, e não pode ser adiada indefinidamente.</li><li><b>Espera limitada</b>: há um limite de quantas vezes outros entram antes de quem já pediu.</li></ul>
+  <h3>Soluções, da mais fraca à mais usada</h3>
+  <div class="scroll"><table class="t">
+    <tr><th>Abordagem</th><th>Ideia</th><th>Problema</th></tr>
+    <tr><td>Desabilitar interrupções</td><td>Ninguém preempta o código crítico</td><td>Só serve em monoprocessador; inviável em multiprocessador</td></tr>
+    <tr><td>Alternância (turn)</td><td>Variável <code>turn</code> diz de quem é a vez</td><td>Viola progresso: força alternar mesmo se o outro não quer entrar</td></tr>
+    <tr><td>Peterson</td><td><code>flag[2]</code> + <code>turn</code>, só software</td><td>Pode falhar em arquiteturas modernas com reordenação de instruções</td></tr>
+    <tr><td>test_and_set / spinlock</td><td>Instrução atômica de hardware</td><td>Espera ocupada gasta CPU</td></tr>
+    <tr><td>Mutex</td><td><code>acquire()</code>/<code>release()</code> sobre um lock</td><td>Deve ser usado com disciplina</td></tr>
+    <tr><td>Semáforo</td><td>Inteiro <code>S</code> com <code>wait</code> e <code>signal</code> atômicos</td><td>Uso incorreto causa deadlock</td></tr>
+  </table></div>
+
+  <h2>Semáforos</h2>
+  <pre class="code" id="c-sem"></pre>
+  <ul class="l">
+    <li><b>Contador</b>: valor irrestrito, controla recursos com várias instâncias. <b>Binário</b> (0 ou 1): comporta-se como mutex.</li>
+    <li>Na implementação com bloqueio, <code>wait</code> coloca o processo numa fila (<code>block</code>) em vez de girar, e <code>signal</code> o acorda (<code>wakeup</code>).</li>
+  </ul>
+
+  <h3>Produtor–consumidor (buffer limitado)</h3>
+  <p>Semáforos: <code>mutex = 1</code> (acesso ao buffer), <code>empty = N</code> (posições livres), <code>full = 0</code> (posições ocupadas).</p>
+  <pre class="code" id="c-bb"></pre>
+  <div class="callout warn"><b>Deadlock</b><p>Se o produtor fizer <code>wait(mutex)</code> <i>antes</i> de <code>wait(empty)</code> e o buffer estiver cheio, ele segura o mutex dormindo e o consumidor nunca consegue entrar para liberar espaço. A ordem dos <code>wait</code> importa; a dos <code>signal</code> não.</p></div>
+
+  <h2>3.4 Problemas clássicos (exercícios do professor)</h2>
+  <p>Os sete problemas da lista de exercícios de sincronização, com as soluções dos slides. Tente escrever a sua solução antes de abrir cada uma. A <i>ideia</i> vem primeiro; depois o código.</p>
+  <div id="ex-sync"></div>
+  <h3>Laboratório: jantar dos filósofos</h3>
+  <p>Cada filósofo pega o garfo da esquerda e depois o da direita. Avance um filósofo de cada vez e tente chegar ao deadlock manualmente. Depois compare, em sorteios aleatórios, a versão ingênua com a solução por estados (<code>test()</code>).</p>
+  <div class="card">
+    <div class="states" id="ph-row"></div>
+    <div class="trans" id="ph-btn"></div>
+    <p id="ph-msg" style="margin:.6em 0 0"></p>
+    <div class="row" style="margin-top:10px"><button class="btn" id="ph-rst">Reiniciar</button><button class="btn pri" id="ph-run">Sortear 2000 execuções de 30 passos</button></div>
+    <div class="metrics" id="ph-res"></div>
+  </div>
+  <div class="callout warn"><b>Deadlock × starvation</b><p><b>Deadlock</b>: todos esperam um evento que só outro processo bloqueado pode causar; ninguém avança. <b>Starvation</b>: o sistema avança, mas um processo específico espera indefinidamente (ex.: escritores na solução com prioridade dos leitores).</p></div>
+  <h3>Problemas de vivacidade</h3>
+  <ul class="l"><li><b>Deadlock</b>: dois processos esperam, cada um, um evento que só o outro pode causar (ex.: P0 faz wait(S), wait(Q); P1 faz wait(Q), wait(S)).</li><li><b>Starvation</b>: um processo espera indefinidamente, embora o sistema como um todo avance.</li><li><b>Inversão de prioridade</b>: tarefa de alta prioridade espera por lock de baixa; resolve-se com <i>herança de prioridade</i>.</li></ul>
+
+  <h3>POSIX</h3>
+  <pre class="code" id="c-posix"></pre>
+</section>
+
+
+<section id="v-ipc" data-view="ipc" hidden>
+  <div class="spacer"></div>
+  <div class="eyebrow">Unidade 3 · 3.2 · Silberschatz cap. 3 · aulas 14–15 (pipes/filas)</div>
+  <h1 style="font-size:2.2rem;margin-top:.3rem">Comunicação entre processos</h1>
+  <p>Processos independentes não se afetam; processos <b>cooperantes</b> precisam trocar informação para compartilhar dados, dividir uma tarefa ou por modularidade.</p>
+  <h2>Modelos de IPC</h2>
+  <div class="grid">
+    <div class="card"><h3 style="margin-top:0">Memória compartilhada</h3><p>Uma região é mapeada nos dois processos. Rápida (só o setup passa pelo kernel), mas a sincronização é problema seu.</p></div>
+    <div class="card"><h3 style="margin-top:0">Troca de mensagens</h3><p><code>send</code>/<code>receive</code> mediados pelo kernel. Mais simples de usar e boa para distribuído, porém com custo de chamada de sistema por mensagem.</p></div>
+  </div>
+  <h3>Pipes</h3>
+  <ul class="l">
+    <li><b>Ordinário</b> (<code>pipe(fd)</code>): unidirecional, só entre processos aparentados (pai/filho). <code>fd[0]</code> lê, <code>fd[1]</code> escreve.</li>
+    <li><b>Nomeado (FIFO)</b>: tem nome no sistema de arquivos, bidirecional em geral half-duplex, sem exigir parentesco.</li>
+  </ul>
+  <pre class="code" id="c-pipe"></pre>
+<div class="callout"><b>Ligação com sincronização</b><p>Na memória compartilhada, quem garante a exclusão mútua é o programador. Revise <a href="#sincronizacao">Sincronização</a>.</p></div>
+
+  <div class="callout"><b>Exemplo do professor (pipe pai → filho)</b><p>O arquivo "Exemplo de uso de pip.txt" (guia de Burkett) tem as palavras-chave do C <b>traduzidas</b> (<code>tubo</code>, <code>se</code>, <code>outro</code>, <code>fechar</code>, <code>escreva</code>, <code>sair</code>, <code>retornar</code>) e não compila. Volte para <code>pipe</code>, <code>if</code>, <code>else</code>, <code>close</code>, <code>write</code>, <code>exit</code>, <code>return</code>. A lógica é a do exemplo acima: o filho fecha <code>fd[0]</code> e escreve em <code>fd[1]</code>; o pai fecha <code>fd[1]</code> e lê de <code>fd[0]</code>.</p></div>
+</section>
+
+<!-- ============ UNIDADE 4: DEADLOCK ============ -->
+<section id="v-deadlock" data-view="deadlock" hidden>
+  <div class="spacer"></div>
+  <div class="eyebrow">Unidade 4 · Silberschatz cap. 7 · aulas 10–13</div>
+  <h1 style="font-size:2.2rem;margin-top:.3rem">Deadlock</h1>
+  <div class="callout warn"><b>Sem slides do professor</b><p>O projeto não tem o material de deadlock. Esta página segue o Silberschatz (cap. 7); confira com seus slides quando tiver. O exemplo de deadlock com semáforos (P0: wait(S), wait(Q); P1: wait(Q), wait(S)) está em <a href="#sincronizacao">Sincronização</a>.</p></div>
+
+  <h2>4.1 Conceitos básicos</h2>
+  <p>Um conjunto de processos está em <b>deadlock</b> quando cada um espera um recurso que só outro processo do conjunto pode liberar. Um processo usa um recurso em três passos: <i>requisitar</i>, <i>usar</i> e <i>liberar</i>.</p>
+  <h3>As quatro condições necessárias (têm de valer ao mesmo tempo)</h3>
+  <div class="grid">
+    <div class="card"><b>1. Exclusão mútua</b><p style="color:var(--muted);font-size:.92rem;margin:.3em 0 0">Pelo menos um recurso não é compartilhável: só um processo o usa por vez.</p></div>
+    <div class="card"><b>2. Posse e espera</b><p style="color:var(--muted);font-size:.92rem;margin:.3em 0 0">Um processo segura recursos e espera por outros.</p></div>
+    <div class="card"><b>3. Não preempção</b><p style="color:var(--muted);font-size:.92rem;margin:.3em 0 0">Recurso só é liberado voluntariamente por quem o detém.</p></div>
+    <div class="card"><b>4. Espera circular</b><p style="color:var(--muted);font-size:.92rem;margin:.3em 0 0">P0 espera P1, P1 espera P2, ..., Pn espera P0.</p></div>
+  </div>
+  <p style="margin-top:12px"><b>Grafo de alocação de recursos</b>: vértices são processos e tipos de recurso; aresta <i>Pi → Rj</i> é uma requisição; <i>Rj → Pi</i> é uma alocação. <b>Sem ciclo</b>, não há deadlock. <b>Com ciclo</b>: se cada tipo tem <i>uma</i> instância, há deadlock; com várias instâncias, o ciclo é necessário, mas não suficiente.</p>
+
+  <h2>4.2 Prevenção</h2>
+  <p>Garantir que <b>pelo menos uma</b> das quatro condições nunca valha:</p>
+  <div class="scroll"><table class="t">
+    <tr><th>Condição negada</th><th>Como</th><th>Custo</th></tr>
+    <tr><td>Exclusão mútua</td><td>Recursos compartilháveis (arquivo só de leitura)</td><td>Nem todo recurso permite (impressora, mutex)</td></tr>
+    <tr><td>Posse e espera</td><td>Pedir tudo de uma vez, ou só pedir quando não segura nada</td><td>Baixa utilização; starvation</td></tr>
+    <tr><td>Não preempção</td><td>Se o pedido não é atendido, o processo libera o que tem; ou o SO retira recursos</td><td>Só serve para recursos cujo estado se salva (CPU, memória)</td></tr>
+    <tr><td>Espera circular</td><td><b>Ordem total</b> dos recursos: requisitar sempre em ordem crescente</td><td>É a mais usada na prática (ordem de locks)</td></tr>
+  </table></div>
+  <h3>Evasão (avoidance): estado seguro e algoritmo do banqueiro</h3>
+  <p>Em vez de negar uma condição, o SO exige que cada processo declare o <b>máximo</b> que usará e só concede um pedido se o estado resultante for <b>seguro</b>. Estado seguro: existe uma <b>sequência segura</b> de processos em que cada um consegue terminar com o que está disponível mais o que os anteriores liberam. Estado inseguro <i>não</i> é deadlock, mas <i>pode levar</i> a ele.</p>
+  <p>Matrizes: <b>Disponível</b>, <b>Alocação</b>, <b>Máximo</b> e <b>Necessidade = Máximo − Alocação</b>. O exemplo é o clássico do Silberschatz: recursos A, B, C com 10, 5 e 7 instâncias.</p>
+  <div class="card">
+    <div class="sim-top">
+      <label class="fld">Disponível<input type="text" id="bk-av" style="width:110px"></label>
+      <label class="fld">Alocação (uma linha por processo)<textarea id="bk-al" rows="5" style="width:140px;font:.95rem var(--font-m);border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);padding:6px"></textarea></label>
+      <label class="fld">Máximo<textarea id="bk-mx" rows="5" style="width:140px;font:.95rem var(--font-m);border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);padding:6px"></textarea></label>
+    </div>
+    <div id="bk-out"></div>
+    <div class="sim-top" style="margin-top:12px">
+      <label class="fld">Pedido do processo nº<input type="number" id="bk-p" min="0" value="1"></label>
+      <label class="fld">Vetor pedido<input type="text" id="bk-r" value="1 0 2" style="width:110px"></label>
+      <button class="btn pri" id="bk-go">Pedir</button><button class="btn" id="bk-rst">Reiniciar exemplo</button>
+    </div>
+    <p id="bk-msg" style="margin-bottom:0"></p>
+  </div>
+  <p style="color:var(--muted);font-size:.9rem">Roteiro do livro: peça (1 0 2) para P1 (concedido); depois (3 3 0) para P4 (recursos insuficientes); depois (0 2 0) para P0 (recusado: estado inseguro).</p>
+
+  <h2>4.3 Detecção e recuperação</h2>
+  <ul class="l">
+    <li><b>Detecção</b>: com uma instância por recurso, procura-se ciclo no <b>grafo de espera</b> (wait-for: Pi → Pj se Pi espera recurso de Pj). Com várias instâncias, usa-se um algoritmo parecido com o do banqueiro, mas sem o <i>Máximo</i>: com base no que cada um <i>está pedindo agora</i>. Quem não conseguir terminar ao final está em deadlock.</li>
+    <li><b>Quando rodar</b>: a cada pedido não atendido (caro) ou periodicamente / quando a utilização da CPU cai.</li>
+    <li><b>Recuperação</b>: <i>terminar processos</i> (todos os do ciclo ou um de cada vez) ou <i>preemptar recursos</i> (escolher vítima, voltar o processo a um ponto anterior, e evitar que a mesma vítima sofra <b>starvation</b>).</li>
+  </ul>
+  <div class="callout"><b>Na prática</b><p>Sistemas como Linux e Windows costumam <b>ignorar</b> o problema (algoritmo do avestruz) e deixam a ordem de locks por conta do programador. Detecção e evasão ficam para bancos de dados e sistemas especializados.</p></div>
+</section>
+<div id="soon-host"></div>
+
+<!-- ============ UNIDADE 5: MEMÓRIA ============ -->
+<section id="v-memoria" data-view="memoria" hidden>
+  <div class="spacer"></div>
+  <div class="eyebrow">Unidade 5 · P2 · Silberschatz caps. 9–10 e 11 · aulas 19–26</div>
+  <h1 style="font-size:2.2rem;margin-top:.3rem">Gerência de memória</h1>
+  <p>A CPU só acessa diretamente registradores e memória principal. O programa precisa estar na memória para executar, e o SO decide <b>o que fica lá e onde</b>. Funções básicas: maximizar o número de processos na memória, permitir programas maiores que a memória física, compartilhar dados e <b>proteger</b> cada processo e o próprio SO.</p>
+
+  <h2>Fundamentos</h2>
+  <ul class="l">
+    <li><b>Proteção</b> com registradores <b>base</b> e <b>limite</b>: a CPU confere cada acesso em modo usuário; carregar esses registradores é instrução privilegiada.</li>
+    <li><b>Ligação de endereços</b> (binding) pode ocorrer em <i>compilação</i> (código absoluto), <i>carga</i> (código relocável) ou <i>execução</i> (exige hardware: MMU).</li>
+    <li><b>Endereço lógico</b> (virtual) é o gerado pela CPU; <b>físico</b> é o visto pela memória. A <b>MMU</b> faz o mapeamento em tempo de execução; no esquema simples, soma o <i>registrador de relocação</i> a cada endereço lógico.</li>
+    <li><b>Carga dinâmica</b>: a rotina só é carregada quando chamada. <b>Ligação dinâmica</b>: um <i>stub</i> localiza a rotina da biblioteca compartilhada na hora da execução.</li>
+  </ul>
+
+  <h2>5.1 Políticas básicas: alocação contígua</h2>
+  <p>Cada processo ocupa <b>uma única</b> região contígua. A memória se divide em partição do SO e partição(ões) de usuário; base e limite protegem os processos entre si.</p>
+  <div class="grid">
+    <div class="card"><h3 style="margin-top:0">Partições fixas</h3><p>Tamanhos definidos na inicialização. Alocação <b>absoluta</b>: o programa só carrega em um endereço (uma partição). <b>Relocável</b>: pode ir em qualquer partição que caiba. Sofre <b>fragmentação interna</b>.</p></div>
+    <div class="card"><h3 style="margin-top:0">Partições variáveis</h3><p>Cada processo recebe uma partição do seu tamanho; sobram <b>buracos</b> (holes). Ao sair, partições livres adjacentes se juntam. Sofre <b>fragmentação externa</b>.</p></div>
+  </div>
+  <h3>Onde colocar o processo? (problema da alocação dinâmica)</h3>
+  <div class="scroll"><table class="t">
+    <tr><th>Estratégia</th><th>Regra</th><th>Efeito</th></tr>
+    <tr><td>First-fit</td><td>Primeiro buraco que couber</td><td>Rápida: não varre tudo</td></tr>
+    <tr><td>Best-fit</td><td>Menor buraco que couber</td><td>Menor sobra, mas deixa muitos buracos minúsculos; varre a lista inteira</td></tr>
+    <tr><td>Worst-fit</td><td>Maior buraco</td><td>Maior sobra (talvez reaproveitável); também varre tudo</td></tr>
+  </table></div>
+  <div class="callout warn"><b>Interna × externa</b><p><b>Interna</b>: memória <i>dentro</i> da partição alocada que o processo não usa (partição maior que o pedido; a última página na paginação). <b>Externa</b>: há memória livre suficiente no total, porém <i>espalhada</i> em pedaços pequenos demais. <b>Compactação</b> reduz a externa, mas só se a relocação for dinâmica (em tempo de execução).</p></div>
+
+  <h3>Laboratório: first, best e worst-fit</h3>
+  <p>Já vem com o exercício 11 da lista. Edite as operações (<code>alloc D 6</code> e <code>free A</code>) e a memória inicial (nome:tamanho, <code>-</code> = livre) e compare as três estratégias.</p>
+  <div class="card">
+    <div class="sim-top">
+      <label class="fld">Memória inicial<input type="text" id="al-init" value="A:5 B:3 -:10 C:6 -:26" style="min-width:230px"></label>
+      <label class="fld">Operações (uma por linha)<textarea id="al-ops" rows="3" style="min-width:170px;font:inherit;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);padding:6px">alloc D 6
+free A
+alloc E 4</textarea></label>
+    </div>
+    <div id="al-out"></div>
+  </div>
+
+  <h2>Paginação</h2>
+  <p>A memória física se divide em <b>quadros</b> (frames) de tamanho fixo (potência de 2; hoje 4 KB ou 8 KB; no Linux: <code>getconf PAGESIZE</code>) e a lógica em <b>páginas</b> do mesmo tamanho. O espaço físico do processo deixa de ser contíguo: <b>acaba a fragmentação externa</b>, mas resta fragmentação <i>interna</i> na última página.</p>
+  <div class="callout"><b>Tradução de endereço</b><p>Endereço lógico de <i>m</i> bits com página de 2<sup>n</sup> bytes: os <i>m−n</i> bits altos são o <b>número da página</b> (<i>p</i>, índice na tabela de páginas) e os <i>n</i> bits baixos o <b>deslocamento</b> (<i>d</i>). O endereço físico é <b>quadro × tamanho + d</b>.</p></div>
+  <h3>Laboratório: tradução de endereços</h3>
+  <div class="card">
+    <div class="sim-top">
+      <label class="fld">Exemplo<select id="pg-pre"></select></label>
+      <label class="fld">Endereço lógico<input type="number" id="pg-addr" min="0" value="13"></label>
+    </div>
+    <div class="scroll"><table class="t" id="pg-tab"></table></div>
+    <p id="pg-out" style="margin-bottom:0;font-size:1.05rem"></p>
+  </div>
+  <h3>Tabela de páginas, TLB e proteção</h3>
+  <ul class="l">
+    <li>A tabela fica na memória; o <b>PTBR</b> aponta para ela e o <b>PTLR</b> informa seu tamanho. Sem ajuda, cada acesso custa <b>dois acessos à memória</b> (tabela + dado).</li>
+    <li>A <b>TLB</b> (memória associativa, 32 a 1.024 entradas) guarda traduções recentes. <b>ASID</b> identifica o processo dono da entrada; sem ASID, a TLB é esvaziada a cada troca de contexto.</li>
+    <li>Bit <b>válido/inválido</b>: página fora do espaço lógico gera <i>trap</i>. Bits de proteção (leitura, escrita, execução) por quadro.</li>
+    <li><b>Páginas compartilhadas</b>: uma cópia de código <i>reentrante</i> (que não se modifica) mapeada em vários processos.</li>
+  </ul>
+  <h3>Estrutura da tabela de páginas</h3>
+  <p>32 bits com páginas de 4 KB dão 2<sup>20</sup> entradas; com 4 bytes cada, <b>4 MB por processo</b> só de tabela, e contíguos. Soluções:</p>
+  <div class="grid">
+    <div class="card"><b>Hierárquica</b><p style="color:var(--muted);font-size:.92rem;margin:.3em 0 0">"Paginar a tabela": 32 bits = 10 (p1, tabela externa) + 10 (p2, tabela interna) + 12 (deslocamento). Em 64 bits fica inviável (muitos acessos).</p></div>
+    <div class="card"><b>Com hash</b><p style="color:var(--muted);font-size:.92rem;margin:.3em 0 0">Número da página virtual passa por hash; cada posição guarda uma lista encadeada (colisões). Comum acima de 32 bits.</p></div>
+    <div class="card"><b>Invertida</b><p style="color:var(--muted);font-size:.92rem;margin:.3em 0 0">Uma entrada por <i>quadro físico</i> <code>&lt;pid, página&gt;</code>. Menos memória, busca mais lenta (use hash e TLB).</p></div>
+  </div>
+  <h3>Swapping</h3>
+  <p>Um processo inteiro pode ser levado temporariamente ao <b>backing store</b> (swap out) e trazido de volta (swap in). Permite que o total de memória dos processos exceda a física. O tempo é dominado pela transferência. Em sistemas móveis normalmente não existe (flash limitada): o iOS pede que apps liberem memória e o Android encerra apps.</p>
+
+  <h2>5.2 Memória virtual</h2>
+  <p><b>Memória virtual</b> separa a memória lógica da física: só <i>parte</i> do programa precisa estar na memória, e o espaço lógico pode ser muito maior que o físico. Mais programas cabem ao mesmo tempo (mais utilização de CPU) e há menos E/S para carregar ou trocar. Funciona porque os programas têm <b>localidade de referência</b>.</p>
+  <h3>Paginação sob demanda</h3>
+  <p>Uma página só vem do disco quando é referenciada (<i>lazy swapper</i>/<b>pager</b>). Cada entrada tem o bit válido/inválido (<code>v</code> = na memória, <code>i</code> = fora). Referência a página <code>i</code> gera <b>page fault</b>.</p>
+  <ol class="l">
+    <li>A referência gera <i>trap</i> para o SO.</li>
+    <li>O SO consulta outra tabela: referência inválida → aborta; só não está na memória → continua.</li>
+    <li>Acha um <b>quadro livre</b> (lista de quadros livres, zero-fill-on-demand).</li>
+    <li>Agenda leitura do disco para o quadro; a CPU atende outro processo enquanto espera.</li>
+    <li>Atualiza as tabelas e põe bit = <code>v</code>.</li>
+    <li><b>Reinicia a instrução</b> que causou a falta.</li>
+  </ol>
+  <p>No <b>pure demand paging</b> o processo começa sem nenhuma página na memória. Uma taxa alta de page faults deixa o sistema lento, pois cada falta custa uma E/S de disco.</p>
+  <h3>Copy-on-Write</h3>
+  <p>Após <code>fork()</code>, pai e filho <b>compartilham</b> as páginas; só quando um deles escreve, aquela página é copiada. Como muitos filhos chamam <code>exec()</code> logo, evita-se copiar o espaço do pai à toa (usado em Linux, Windows e macOS; <code>vfork()</code> é a variante em que o pai fica suspenso).</p>
+  <h3>Substituição de páginas</h3>
+  <p>Se não há quadro livre, o SO escolhe uma <b>vítima</b>. O <b>bit de modificação (dirty)</b> evita gravar em disco páginas não alteradas; com vítima suja ocorrem <b>duas transferências</b> por falta. A qualidade se mede pelo <b>número de page faults</b> numa <i>string de referências</i> (só números de páginas; repetir a mesma página seguida não gera falta).</p>
+  <div class="scroll"><table class="t">
+    <tr><th>Algoritmo</th><th>Regra</th><th>Observação</th></tr>
+    <tr><td>FIFO</td><td>Remove a página mais antiga (fila)</td><td>Simples, mas pode remover página muito usada; sofre da <b>anomalia de Belady</b>: mais quadros podem gerar <i>mais</i> faltas</td></tr>
+    <tr><td>Ótimo (OPT)</td><td>Remove a página que ficará mais tempo sem uso</td><td>Impossível na prática (exige conhecer o futuro); serve de referência</td></tr>
+    <tr><td>LRU</td><td>Remove a menos recentemente usada</td><td>Bom e muito usado; implementação por <i>contador</i> (busca o menor) ou por <i>pilha</i> (move a referenciada para o topo; sem busca)</td></tr>
+  </table></div>
+  <h3>Laboratório: substituição de páginas</h3>
+  <p>A string dos slides (<code>7,0,1,2,0,3,0,4,2,3,0,3,0,3,2,1,2,0,1,7,0,1</code>, 3 quadros) dá <b>FIFO 15, OPT 9, LRU 12</b>. Teste também a string de Belady.</p>
+  <div class="card">
+    <div class="sim-top">
+      <label class="fld">Exemplo<select id="rp-pre"></select></label>
+      <label class="fld">String de referências<input type="text" id="rp-ref" style="min-width:260px"></label>
+      <label class="fld">Quadros<input type="number" id="rp-n" min="1" max="7" value="3"></label>
+      <label class="fld">Algoritmo<select id="rp-algo"><option value="fifo">FIFO</option><option value="lru">LRU</option><option value="opt">Ótimo</option></select></label>
+    </div>
+    <div class="scroll"><table class="t" id="rp-tab" style="text-align:center"></table></div>
+    <div class="metrics" id="rp-met"></div>
+  </div>
+  <div class="callout warn"><b>Lacuna do material</b><p>O slide de memória virtual do projeto termina em LRU. Alocação de quadros, <b>thrashing</b>, conjunto de trabalho (working set) e aproximações de LRU (segunda chance) aparecem nos objetivos do capítulo, mas não nos slides que recebi; veja o cap. 10 do Silberschatz.</p></div>
+
+  <h3>Segmentação</h3>
+  <p><i>(Os slides de segmentação não estão no projeto; resumo conforme o Silberschatz, cap. 9.)</i> Na <b>paginação</b> o espaço é dividido em blocos de <b>tamanho fixo</b>, invisíveis ao programador. Na <b>segmentação</b> o espaço é dividido em unidades lógicas de <b>tamanho variável</b> (código, pilha, dados, bibliotecas). O endereço é <code>&lt;segmento, deslocamento&gt;</code>; a <b>tabela de segmentos</b> guarda <i>base</i> e <i>limite</i> de cada um, e deslocamento ≥ limite gera trap. Paginação evita fragmentação externa e tem interna; a segmentação tem externa, mas reflete a visão do programador e facilita proteção e compartilhamento.</p>
+
+  <h2>5.3 Sistemas de memória não-volátil e armazenamento em massa</h2>
+  <div class="grid">
+    <div class="card"><h3 style="margin-top:0">HDD</h3><p>Pratos magnéticos girando; <b>tempo de posicionamento</b> = <i>seek</i> (mover o braço ao cilindro) + <i>latência rotacional</i>. O SO quer minimizar o seek.</p></div>
+    <div class="card"><h3 style="margin-top:0">NVM / SSD</h3><p>Sem partes móveis, sem seek: muito mais rápido e mais IOPS. Mas escreve em <i>páginas</i>, <b>não sobrescreve no lugar</b> (apaga em blocos maiores) e tem ~100.000 apagamentos de vida útil (DWPD). Interface <b>NVMe</b> direto no PCI.</p></div>
+  </div>
+  <h3>Escalonamento de disco (HDD)</h3>
+  <p>Fila de requisições com cilindros 0–199: <code>98, 183, 37, 122, 14, 124, 65, 67</code>, cabeça em <b>53</b>.</p>
+  <div class="scroll"><table class="t">
+    <tr><th>Algoritmo</th><th>Regra</th></tr>
+    <tr><td>FCFS</td><td>Na ordem de chegada</td></tr>
+    <tr><td>SSTF</td><td>Menor seek a partir da posição atual (pode causar starvation)</td></tr>
+    <tr><td>SCAN (elevador)</td><td>Vai até uma ponta atendendo, inverte e volta</td></tr>
+    <tr><td>C-SCAN</td><td>Atende só em um sentido; ao chegar ao fim, volta ao início sem atender (espera mais uniforme)</td></tr>
+  </table></div>
+  <div class="card" style="margin-top:12px">
+    <div class="sim-top">
+      <label class="fld">Fila<input type="text" id="dk-q" value="98 183 37 122 14 124 65 67" style="min-width:230px"></label>
+      <label class="fld">Cabeça<input type="number" id="dk-h" value="53" min="0" max="199"></label>
+      <label class="fld">SCAN indo para<select id="dk-dir"><option value="0">cilindro 0</option><option value="1">cilindro 199</option></select></label>
+    </div>
+    <div id="dk-out"></div>
+    <p style="color:var(--muted);font-size:.85rem;margin-bottom:0">Movimento total em cilindros. Nos slides: FCFS 640, SSTF 236, SCAN 236 (indo ao 0), C-SCAN 382 (contando o retorno).</p>
+  </div>
+  <h3>Gerência do dispositivo</h3>
+  <ul class="l"><li><b>Formatação física</b> (setores com cabeçalho, dados e ECC), <b>partição</b> e <b>formatação lógica</b> (criar o sistema de arquivos).</li><li>Na montagem, o SO verifica a consistência dos metadados. O <b>bloco de boot</b> carrega o kernel. <b>Raw disk</b> é para aplicações como bancos de dados que gerem seus blocos. Blocos ruins são tratados por <i>sector sparing</i>.</li></ul>
+
+  <h2>Exercícios da disciplina</h2>
+  <p>Tente antes de abrir a resolução. As contas abaixo conferem com o simulador de tradução.</p>
+  <div id="ex-mem"></div>
+</section>
+
+<!-- ============ UNIDADE 6: ARQUIVOS ============ -->
+<section id="v-arquivos" data-view="arquivos" hidden>
+  <div class="spacer"></div>
+  <div class="eyebrow">Unidade 6 · P2 · Silberschatz caps. 13–15 · aulas 29–30</div>
+  <h1 style="font-size:2.2rem;margin-top:.3rem">Gerência de arquivos</h1>
+  <p>O SO dá uma visão <b>lógica e uniforme</b> do armazenamento: abstrai as propriedades físicas e oferece o <b>arquivo</b>, um espaço lógico contíguo de dados (numéricos, caracteres, binários) ou programa. O conteúdo é definido por quem o cria.</p>
+
+  <h2>6.1 Arquivos</h2>
+  <h3>Atributos</h3>
+  <p>Nome (única informação legível por humanos), <b>identificador</b> (número único no sistema de arquivos), tipo, <b>localização</b>, tamanho, <b>proteção</b>, data/hora e usuário. Ficam na <b>estrutura de diretórios</b>, no disco.</p>
+  <h3>Operações</h3>
+  <ul class="l">
+    <li><b>Create</b> (achar espaço + criar entrada no diretório), <b>write</b> e <b>read</b> (com ponteiro de posição), <b>seek</b> (reposicionar), <b>delete</b>, <b>truncate</b> (esvazia mantendo atributos).</li>
+    <li><b>open(F)</b> busca a entrada no diretório e a traz à memória; <b>close(F)</b> a grava de volta. Evita pesquisar o diretório a cada operação.</li>
+  </ul>
+  <div class="callout"><b>Tabelas de arquivos abertos</b><p>Dois níveis: a tabela <b>por processo</b> (guarda, por exemplo, o ponteiro atual de cada arquivo) aponta para a tabela <b>global do sistema</b> (localização no disco, datas, tamanho e o <i>contador de aberturas</i>). O descritor retornado por <code>open()</code> é um índice na tabela do processo.</p></div>
+  <h3>Travas de arquivo</h3>
+  <p>Parecidas com leitores–escritores: trava <b>compartilhada</b> (vários leitores) e <b>exclusiva</b> (escritor). <b>Obrigatória</b> (Windows): o acesso é negado conforme as travas. <b>Consultiva</b> (Unix): os processos consultam e decidem.</p>
+  <h3>Tipos e estrutura</h3>
+  <p>O tipo pode vir na <b>extensão</b> do nome. O Unix usa um <b>número mágico</b> no início de arquivos binários (PDF: <code>25 50 44 46</code>; ZIP: <code>50 4b 03 04</code>; GIF: <code>47 49 46 38</code>). Unix e Windows tratam o arquivo como <b>sequência de bytes</b>: máxima flexibilidade, mas cada programa interpreta seu formato. Todo SO precisa conhecer ao menos o formato executável.</p>
+  <h3>Métodos de acesso</h3>
+  <div class="grid">
+    <div class="card"><b>Sequencial</b><p style="color:var(--muted);font-size:.92rem;margin:.3em 0 0"><code>read_next</code>, <code>write_next</code>, <code>reset</code>. O mais comum (editores, compiladores).</p></div>
+    <div class="card"><b>Direto (relativo)</b><p style="color:var(--muted);font-size:.92rem;margin:.3em 0 0"><code>read(n)</code>, <code>write(n)</code> com <i>n</i> = nº de bloco relativo ao início do arquivo (0, 1, 2...). Bancos de dados.</p></div>
+    <div class="card"><b>Indexado</b><p style="color:var(--muted);font-size:.92rem;margin:.3em 0 0">Um índice (como o de um livro) aponta para blocos; arquivos grandes podem ter índice do índice.</p></div>
+  </div>
+
+  <h2>6.2 Diretórios</h2>
+  <p>O diretório é uma <b>tabela de símbolos</b>: traduz nomes em blocos de controle de arquivo (FCB/i-node). Operações: procurar, criar, apagar, listar e renomear.</p>
+  <div class="scroll"><table class="t">
+    <tr><th>Estrutura</th><th>Ideia</th><th>Problema / vantagem</th></tr>
+    <tr><td>Nível único</td><td>Um diretório para todos</td><td>Nomes precisam ser únicos</td></tr>
+    <tr><td>Dois níveis</td><td>MFD aponta para um UFD por usuário</td><td>Mesmo nome para usuários diferentes; sem subdiretórios</td></tr>
+    <tr><td>Árvore</td><td>Raiz e subdiretórios; caminhos <b>absoluto</b> (da raiz) e <b>relativo</b> (do atual)</td><td>Mais comum; não permite compartilhar</td></tr>
+    <tr><td>Grafo acíclico</td><td>Compartilha arquivos/subdiretórios por <i>links</i></td><td>Fácil saber quando não há mais referências</td></tr>
+    <tr><td>Grafo geral</td><td>Permite ciclos</td><td>Risco de laço infinito; exige detecção de ciclos</td></tr>
+  </table></div>
+
+  <h2>6.3 Implementação de sistemas de arquivos</h2>
+  <h3>Camadas</h3>
+  <ol class="l">
+    <li><b>Controle de E/S</b>: drivers e tratadores de interrupção (<i>"leia cilindro 72, trilha 2, setor 10"</i>).</li>
+    <li><b>Sistema de arquivos básico</b>: "ler bloco 123"; gerencia buffers e caches.</li>
+    <li><b>Módulo de organização de arquivos</b>: traduz bloco lógico em físico; espaço livre e alocação.</li>
+    <li><b>Sistema de arquivos lógico</b>: metadados, nome → FCB (<b>i-node</b> no UNIX), diretórios e proteção.</li>
+  </ol>
+  <p>Camadas reduzem complexidade e redundância, mas acrescentam overhead. Há muitos sistemas: ISO 9660 (CD), UFS/FFS, FAT, FAT32, NTFS, ext3/ext4 (Linux), ZFS.</p>
+  <h3>Estruturas em disco e em memória</h3>
+  <ul class="l"><li><b>Em disco</b>: bloco de boot, <b>bloco de controle de volume</b> (superbloco/MFT: nº de blocos, blocos livres, tamanho do bloco), estrutura de diretórios, FCB por arquivo.</li><li><b>Em memória</b>: tabela de montagem, tabela global de arquivos abertos, tabela por processo e buffers.</li></ul>
+  <h3>Métodos de alocação de blocos</h3>
+  <div class="scroll"><table class="t">
+    <tr><th>Método</th><th>Como</th><th>Vantagens</th><th>Problemas</th></tr>
+    <tr><td>Contígua</td><td>Início + comprimento</td><td>Melhor desempenho, simples</td><td>Achar espaço, saber o tamanho, fragmentação externa (compactar)</td></tr>
+    <tr><td>Encadeada</td><td>Cada bloco aponta para o próximo; termina em nil</td><td>Sem fragmentação externa</td><td>Acesso direto lento (muitos seeks); ponteiros ocupam espaço</td></tr>
+    <tr><td>FAT</td><td>Tabela no início do volume indexada por bloco; entrada do diretório guarda o primeiro bloco</td><td>Encadeada mais rápida e cacheável</td><td>Muitos seeks se a FAT não estiver em cache</td></tr>
+    <tr><td>Indexada</td><td>Bloco(s) de índice com ponteiros para os dados</td><td>Acesso direto sem fragmentação externa</td><td>Overhead do bloco de índice</td></tr>
+  </table></div>
+  <h3>i-node do UNIX</h3>
+  <p>O i-node guarda 15 ponteiros: <b>12 diretos</b> e 3 indiretos (<b>simples</b>, <b>duplo</b> e <b>triplo</b>). Com bloco de 4 KB, 12 diretos = 48 KB sem bloco de índice. O i-node distingue arquivo de diretório; a entrada de diretório tem comprimento, nome e nº do i-node. Para resolver <code>/usr/ast/mbox</code> o kernel parte da raiz (ou do diretório atual, se o caminho não começa com "/") e segue i-node por i-node.</p>
+  <div class="card">
+    <div class="eyebrow">Laboratório · tamanho máximo de arquivo</div>
+    <div class="sim-top" style="margin-top:8px">
+      <label class="fld">Bloco (bytes)<select id="in-b"><option>1024</option><option>2048</option><option selected>4096</option><option>8192</option></select></label>
+      <label class="fld">Ponteiro (bytes)<select id="in-p"><option selected>4</option><option>8</option></select></label>
+      <label class="fld">Diretos<input type="number" id="in-d" value="12" min="0" max="20"></label>
+    </div>
+    <div class="metrics" id="in-out"></div>
+  </div>
+
+  <h2>6.4 Proteção</h2>
+  <p>O dono controla <b>o que</b> pode ser feito e <b>por quem</b>. Tipos de acesso: leitura, escrita, execução, append, remoção, listagem. A forma geral é a <b>lista de controle de acesso (ACL)</b>, mas ela fica longa; o Unix condensa em três classes: <b>dono</b>, <b>grupo</b> e <b>público</b>, cada uma com bits <code>rwx</code>.</p>
+  <div class="card">
+    <div class="eyebrow">Calculadora de permissões (chmod)</div>
+    <div class="scroll"><table class="t" style="margin-top:6px;max-width:420px">
+      <tr><th></th><th>r (4)</th><th>w (2)</th><th>x (1)</th></tr>
+      <tr><td>Dono</td><td><input type="checkbox" class="pm" checked></td><td><input type="checkbox" class="pm" checked></td><td><input type="checkbox" class="pm" checked></td></tr>
+      <tr><td>Grupo</td><td><input type="checkbox" class="pm" checked></td><td><input type="checkbox" class="pm" checked></td><td><input type="checkbox" class="pm"></td></tr>
+      <tr><td>Público</td><td><input type="checkbox" class="pm"></td><td><input type="checkbox" class="pm"></td><td><input type="checkbox" class="pm" checked></td></tr>
+    </table></div>
+    <p id="pm-out" style="margin-bottom:0;font:1.05rem var(--font-m)"></p>
+    <p style="color:var(--muted);font-size:.85rem;margin:.4em 0 0">O exemplo do slide é 7 (111), 6 (110) e 1 (001): <code>chmod 761 arquivo</code>.</p>
+  </div>
+
+  <h2>6.5 Segurança e arquivos mapeados em memória</h2>
+  <p>Proteção é o controle de acesso a recursos definidos pelo SO; <b>segurança</b> é a defesa contra ataques. Os slides de arquivos do projeto cobrem a proteção; para segurança veja o cap. 16 do Silberschatz.</p>
+  <p><b>Arquivo mapeado em memória</b>: um bloco do arquivo é associado a uma página do espaço virtual. O primeiro acesso causa <i>page fault</i> (paginação sob demanda) e depois lê e escreve viram acessos comuns à memória, sem <code>read()</code>/<code>write()</code>. A gravação em disco não é imediata; vários processos podem mapear o mesmo arquivo, e a memória compartilhada costuma ser implementada assim. É a ponte entre as unidades 5 e 6.</p>
+</section>
+
+<!-- ============ UNIDADE 7: E/S ============ -->
+<section id="v-es" data-view="es" hidden>
+  <div class="spacer"></div>
+  <div class="eyebrow">Unidade 7 · P2 · Silberschatz cap. 12 · aulas 27–28</div>
+  <h1 style="font-size:2.2rem;margin-top:.3rem">Gerência de entrada e saída</h1>
+  <p>A E/S é um dos grandes componentes do projeto de um SO: dispositivos muito variados, vários métodos de controle, gerência de desempenho e novos dispositivos o tempo todo. Os <b>device drivers</b> encapsulam os detalhes e apresentam uma interface uniforme ao subsistema de E/S.</p>
+
+  <h2>7.1 Dispositivos de E/S: hardware</h2>
+  <ul class="l">
+    <li><b>Porta</b>: ponto de conexão. <b>Barramento</b>: acesso direto compartilhado (PCI/PCIe, SAS). <b>Controlador</b> (host adapter): eletrônica que opera porta, barramento ou dispositivo; os complexos (Fibre Channel, HBA) têm processador, microcódigo e memória própria.</li>
+    <li>Registradores do dispositivo: <b>data-in</b>, <b>data-out</b>, <b>status</b> e <b>control</b>. O driver escreve comandos e lê resultados.</li>
+    <li>Como endereçar: <b>instruções de E/S dedicadas</b> (endereço de porta) ou <b>E/S mapeada em memória</b> (registradores no espaço de endereços, acessados com instruções normais).</li>
+  </ul>
+
+  <h2>7.2 Controladores: três formas de transferir dados</h2>
+  <div class="scroll"><table class="t">
+    <tr><th>Técnica</th><th>Como funciona</th><th>Quando</th></tr>
+    <tr><td>Polling (E/S programada)</td><td>A CPU lê repetidamente o bit <i>busy</i> (espera ocupada), escreve o comando, ativa <i>command-ready</i> e o controlador executa e limpa os bits</td><td>Razoável se o dispositivo é rápido; ineficiente se é lento</td></tr>
+    <tr><td>Interrupções</td><td>O dispositivo aciona a linha de pedido de interrupção; a CPU confere após cada instrução e desvia pelo <b>vetor</b>. Interrupções <i>mascaráveis</i> ou não, com prioridade e encadeamento</td><td>Eventos sem custo de espera; também usadas em exceções, page faults e system calls (trap)</td></tr>
+    <tr><td>DMA</td><td>O SO escreve na memória um <b>bloco de comando</b> (origem, destino, modo, nº de bytes); o controlador de DMA move os dados sem a CPU (<i>cycle stealing</i>) e interrompe ao final</td><td>Grandes volumes de dados</td></tr>
+  </table></div>
+  <p>Mesmo sistemas de um usuário tratam centenas de interrupções por segundo e servidores, centenas de milhares; por isso o tratamento precisa ser <b>rápido</b>.</p>
+
+  <h2>7.3 Drivers e interface de aplicação</h2>
+  <p>As chamadas de E/S encapsulam o dispositivo em <b>classes genéricas</b>; o driver esconde as diferenças entre controladores. Os dispositivos variam em:</p>
+  <div class="grid">
+    <div class="card"><b>Fluxo de caracteres × bloco</b><p style="color:var(--muted);font-size:.9rem;margin:.3em 0 0">byte a byte (teclado) × bloco como unidade (disco)</p></div>
+    <div class="card"><b>Sequencial × acesso aleatório</b><p style="color:var(--muted);font-size:.9rem;margin:.3em 0 0">ordem fixa × qualquer posição (seek)</p></div>
+    <div class="card"><b>Síncrono × assíncrono</b><p style="color:var(--muted);font-size:.9rem;margin:.3em 0 0">tempo de resposta previsível × imprevisível</p></div>
+    <div class="card"><b>Compartilhável × dedicado</b><p style="color:var(--muted);font-size:.9rem;margin:.3em 0 0">vários processos ao mesmo tempo × um só</p></div>
+    <div class="card"><b>Velocidade</b><p style="color:var(--muted);font-size:.9rem;margin:.3em 0 0">de bytes/s a GB/s</p></div>
+    <div class="card"><b>Leitura/escrita</b><p style="color:var(--muted);font-size:.9rem;margin:.3em 0 0">ambos, só leitura ou só escrita</p></div>
+  </div>
+  <p style="margin-top:12px">Duas formas de uma chamada de E/S: <b>bloqueante</b> (o controle só volta ao programa quando a E/S termina) ou <b>não bloqueante/assíncrona</b> (volta sem esperar; o SO usa uma <i>device-status table</i> com tipo, endereço e estado de cada dispositivo).</p>
+
+  <h2>Subsistema de E/S do kernel</h2>
+  <div class="scroll"><table class="t">
+    <tr><th>Serviço</th><th>Função</th></tr>
+    <tr><td>Escalonamento</td><td>Ordena as requisições numa fila por dispositivo (imparcialidade, QoS)</td></tr>
+    <tr><td>Buffering</td><td>Memória temporária na transferência: compensa diferença de <i>velocidade</i> e de <i>tamanho</i> de transferência e mantém a "semântica de cópia". <b>Double buffering</b> desacopla produtor e consumidor</td></tr>
+    <tr><td>Caching</td><td>Cópia em memória mais rápida; <i>sempre é só uma cópia</i> (o buffer pode ser o único exemplar dos dados)</td></tr>
+    <tr><td>Spooling</td><td>Retém a saída de um dispositivo que atende uma requisição por vez (impressora), sobrepondo a saída de um job à entrada de outros</td></tr>
+    <tr><td>Reserva de dispositivo</td><td>Acesso exclusivo por chamadas de alocação/liberação; cuidado com <b>deadlock</b></td></tr>
+    <tr><td>Tratamento de erros</td><td>Repetir a operação, registrar em log, parar de usar dispositivo com muitas falhas; devolver um código de erro</td></tr>
+    <tr><td>Proteção</td><td>Todas as instruções de E/S são <b>privilegiadas</b>; o usuário faz E/S por <i>system calls</i>. Portas e regiões mapeadas também são protegidas</td></tr>
+  </table></div>
+  <div class="callout warn"><b>Buffer × cache × spool</b><p><b>Buffer</b>: guarda dados <i>em trânsito</i> entre duas velocidades. <b>Cache</b>: guarda <i>cópia</i> de dados para acessar mais rápido. <b>Spool</b>: guarda a <i>saída inteira</i> de jobs para um dispositivo que não intercala requisições.</p></div>
+
+  <h2>Ciclo de vida de uma requisição de E/S</h2>
+  <p>(Resumo conforme o Silberschatz; o slide é uma figura.)</p>
+  <ol class="l">
+    <li>O processo faz uma <i>system call</i> bloqueante de leitura.</li>
+    <li>O kernel verifica se os dados já estão no buffer/cache; se sim, devolve.</li>
+    <li>Senão, bloqueia o processo e enfileira a requisição; o <b>driver</b> programa o controlador.</li>
+    <li>O controlador executa a operação e, com <b>DMA</b>, leva os dados à memória.</li>
+    <li>O dispositivo <b>interrompe</b>; o tratador identifica o dispositivo e conclui a requisição.</li>
+    <li>O kernel desbloqueia o processo (volta à fila de prontos) e copia os dados ou o status.</li>
+  </ol>
+  <h3>Desempenho</h3>
+  <p>A E/S pesa na CPU (driver e código do kernel), nas trocas de contexto por interrupção, na cópia de dados e no tráfego de rede. Para melhorar: <b>reduzir trocas de contexto e cópias</b>, reduzir interrupções (transferências grandes, controladores inteligentes, polling), usar <b>DMA</b>, usar hardware mais esperto e balancear CPU, memória, barramento e E/S.</p>
+  <div class="callout"><b>Ligação com as outras unidades</b><p>Interrupções e DMA retomam a Unidade 1; o disco e o escalonamento de disco estão em <a href="#memoria">5.3</a>; spooling e reserva de dispositivo se ligam a <a href="#sincronizacao">sincronização</a> e deadlock.</p></div>
+</section>
+
+<!-- ============ TESTE ============ -->
+<section id="v-teste" data-view="teste" hidden>
+  <div class="spacer"></div>
+  <div class="eyebrow">Revisão</div>
+  <h1 style="font-size:2.2rem;margin-top:.3rem">Teste-se</h1>
+  <p>Escolha uma alternativa; a explicação aparece depois.</p>
+  <div id="quiz"></div>
+  <div class="card" style="margin-top:14px"><b>Placar:</b> <span id="q-score">0 / 0</span> <button class="btn" id="q-reset" style="margin-left:10px">Recomeçar</button></div>
+</section>
+
+<footer>Sisop Lab · material de estudo feito a partir dos slides da disciplina. Para aprofundar: Silberschatz, Galvin e Gagne, <i>Operating System Concepts</i>; Costa, <i>Programação Concorrente com Pthreads</i>; Kerrisk, <i>The Linux Programming Interface</i>.</footer>
+</main>
+<script>
+/*SIM-START*/
+const ALGOS=[
+  {id:'fcfs',name:'FCFS',short:'FCFS'},
+  {id:'sjf',name:'SJF (não preemptivo)',short:'SJF'},
+  {id:'srtf',name:'SRTF (SJF preemptivo)',short:'SRTF'},
+  {id:'rr',name:'Round Robin',short:'RR',q:true},
+  {id:'prio',name:'Prioridade (não preemptivo)',short:'Prio'},
+  {id:'priop',name:'Prioridade (preemptivo)',short:'Prio-P'},
+  {id:'priorr',name:'Prioridade + Round Robin',short:'Prio+RR',q:true}
+];
+function simulate(rows,algo,q){
+  const n=rows.length,rem=rows.map(r=>r.burst),first=Array(n).fill(-1),fin=Array(n).fill(-1),tl=[];
+  let done=0,t=0,cur=-1,slice=0;
+  q=Math.max(1,q|0||1);
+  const queued=(algo==='fcfs'||algo==='rr'||algo==='priorr');
+  const queue=[];let pending=-1;
+  const key=i=>algo==='sjf'?rows[i].burst:algo==='srtf'?rem[i]:rows[i].prio;
+  while(done<n&&t<5000){
+    if(queued){
+      for(let i=0;i<n;i++)if(rows[i].arr===t)queue.push(i);
+      if(pending>=0){queue.push(pending);pending=-1;}
+      if(algo==='priorr'&&cur>=0&&queue.some(i=>rows[i].prio<rows[cur].prio)){queue.push(cur);cur=-1;}
+      if(cur<0&&queue.length){
+        let k=0;
+        if(algo==='priorr')for(let j=1;j<queue.length;j++)if(rows[queue[j]].prio<rows[queue[k]].prio)k=j;
+        cur=queue.splice(k,1)[0];slice=0;
+      }
+    }else{
+      const pre=(algo==='srtf'||algo==='priop');
+      if(pre||cur<0){
+        let best=-1;
+        for(let i=0;i<n;i++){
+          if(rows[i].arr>t||rem[i]<=0)continue;
+          if(best<0){best=i;continue;}
+          const a=key(i),b=key(best);
+          if(a<b)best=i;
+          else if(a===b){
+            if(best===cur)continue;
+            if(i===cur||rows[i].arr<rows[best].arr)best=i;
+          }
+        }
+        cur=best;
+      }
+    }
+    if(cur<0){tl.push(-1);t++;continue;}
+    tl.push(cur);if(first[cur]<0)first[cur]=t;
+    rem[cur]--;slice++;t++;
+    if(rem[cur]===0){fin[cur]=t;done++;cur=-1;}
+    else if((algo==='rr'||algo==='priorr')&&slice>=q){pending=cur;cur=-1;}
+  }
+  return{tl,T:tl.length,first,fin};
+}
+function summarize(sim,rows){
+  const n=rows.length;
+  const per=rows.map((r,i)=>({wait:sim.fin[i]-r.arr-r.burst,turn:sim.fin[i]-r.arr,resp:sim.first[i]-r.arr}));
+  const avg=k=>per.reduce((s,p)=>s+p[k],0)/n;
+  let sw=0;for(let t=1;t<sim.T;t++){const a=sim.tl[t-1],b=sim.tl[t];if(a>=0&&b>=0&&a!==b)sw++;}
+  const busy=sim.tl.filter(x=>x>=0).length;
+  return{per,wait:avg('wait'),turn:avg('turn'),resp:avg('resp'),sw,util:busy/Math.max(1,sim.T),thr:n/Math.max(1,sim.T)};
+}
+function blocksOf(sim,algo,q){
+  const out=[];let t=0;
+  while(t<sim.T){
+    const p=sim.tl[t];let e=t+1;
+    while(e<sim.T&&sim.tl[e]===p)e++;
+    if(algo==='rr'&&p>=0){for(let s=t;s<e;s+=q)out.push({p,s,e:Math.min(e,s+q)});}
+    else out.push({p,s:t,e});
+    t=e;
+  }
+  return out;
+}
+/*SIM-END*/
+/*LABS-START*/
+/* Substituição de páginas: ref = array de páginas, n = nº de quadros */
+function pageSim(ref,n,algo){
+  const fr=[],steps=[];let faults=0,fifoQ=[],last={};
+  for(let i=0;i<ref.length;i++){
+    const p=ref[i];let fault=false,victim=null;
+    if(!fr.includes(p)){
+      fault=true;faults++;
+      if(fr.length<n)fr.push(p);
+      else{
+        let v;
+        if(algo==='fifo'){v=fifoQ.shift();}
+        else if(algo==='lru'){v=fr.reduce((a,b)=>last[a]<last[b]?a:b);}
+        else{ // opt: mais distante no futuro (ou nunca usada)
+          let far=-1;v=fr[0];
+          for(const f of fr){const j=ref.indexOf(f,i+1);const d=j<0?Infinity:j;if(d>far){far=d;v=f;}}
+        }
+        victim=v;fr[fr.indexOf(v)]=p;
+      }
+      if(algo==='fifo')fifoQ.push(p);
+    }
+    last[p]=i;
+    steps.push({p,fault,victim,frames:fr.slice()});
+  }
+  return{faults,steps};
+}
+/* Alocação dinâmica: blocks=[{n:nome|null,s:tam}] */
+function allocOp(blocks,op,strat){
+  const b=blocks.map(x=>({...x}));
+  if(op.t==='alloc'){
+    let idx=-1;
+    for(let i=0;i<b.length;i++){
+      if(b[i].n!==null||b[i].s<op.s)continue;
+      if(strat==='first'){idx=i;break;}
+      if(idx<0||(strat==='best'&&b[i].s<b[idx].s)||(strat==='worst'&&b[i].s>b[idx].s))idx=i;
+    }
+    if(idx<0)return{b,ok:false};
+    const rest=b[idx].s-op.s;b[idx]={n:op.n,s:op.s};
+    if(rest>0)b.splice(idx+1,0,{n:null,s:rest});
+    return{b,ok:true};
+  }
+  const i=b.findIndex(x=>x.n===op.n);if(i<0)return{b,ok:false};
+  b[i]={n:null,s:b[i].s};
+  for(let k=b.length-2;k>=0;k--)if(b[k].n===null&&b[k+1].n===null){b[k].s+=b[k+1].s;b.splice(k+1,1);}
+  return{b,ok:true};
+}
+/* Escalonamento de disco */
+function diskSched(q,head,max,algo,dirUp){
+  let order=[],pend=q.slice(),pos=head,total=0;
+  const mv=(to)=>{total+=Math.abs(to-pos);pos=to;order.push(to);};
+  if(algo==='fcfs'){for(const r of q)mv(r);}
+  else if(algo==='sstf'){while(pend.length){let k=0;for(let i=1;i<pend.length;i++)if(Math.abs(pend[i]-pos)<Math.abs(pend[k]-pos))k=i;mv(pend.splice(k,1)[0]);}}
+  else if(algo==='scan'){
+    const lo=pend.filter(x=>x<pos).sort((a,b)=>b-a),hi=pend.filter(x=>x>=pos).sort((a,b)=>a-b);
+    if(dirUp){for(const x of hi)mv(x);if(lo.length){mv(max);for(const x of lo)mv(x);}}
+    else{for(const x of lo)mv(x);if(hi.length){mv(0);for(const x of hi)mv(x);}}
+  }else{ // cscan (sobe, volta ao 0 sem atender)
+    const lo=pend.filter(x=>x<pos).sort((a,b)=>a-b),hi=pend.filter(x=>x>=pos).sort((a,b)=>a-b);
+    for(const x of hi)mv(x);
+    if(lo.length){mv(max);mv(0);for(const x of lo)mv(x);}
+  }
+  return{order,total};
+}
+/* Paginação */
+function translate(addr,size,pt){
+  const p=Math.floor(addr/size),d=addr%size;
+  if(p>=pt.length)return{p,d,err:'endereço fora do espaço lógico'};
+  const f=pt[p];if(f===null)return{p,d,fault:true};
+  return{p,d,f,phys:f*size+d};
+}
+/* i-node */
+function inodeMax(block,ptr,direct){
+  const k=block/ptr;return{direct:direct*block,single:k*block,double:k*k*block,triple:k*k*k*block,k};
+}
+/*LABS-END*/
+/*LOGIC2-START*/
+/* Árvore de fork: devolve lista de processos {id,parent,i,child} (ids simbólicos P0..) */
+function forkTree(prog,n){
+  const out=[];
+  if(prog==='chain'){ // ex4: if (childpid = fork()) break;  -> o pai sai, o filho segue
+    for(let k=0;k<n;k++)out.push({id:k,parent:k-1,i:k<n-1?k+1:n,child:k<n-1?k+1:null});
+  }else if(prog==='fan'||prog==='fanwait'){ // ex5/ex6: if ((childpid=fork())<=0) break; -> o filho sai, o pai segue
+    for(let k=1;k<n;k++)out.push({id:k,parent:0,i:k,child:null});
+    out.unshift({id:0,parent:-1,i:n,child:n>1?n-1:null});
+  }else{ // for(i<n) fork(); sem break: 2^n processos
+    const procs=[{id:0,parent:-1,i:0}];let next=1;
+    for(let i=0;i<n;i++){const m=procs.length;for(let k=0;k<m;k++)procs.push({id:next++,parent:procs[k].id,i});}
+    return procs.map(p=>({id:p.id,parent:p.parent,i:n,child:null}));
+  }
+  return out;
+}
+/* Filósofos: mode 'naive' (pega esquerdo e depois direito) ou 'state' (solução com test()) */
+function philRun(mode,N,steps,rnd){
+  const st=Array(N).fill(0); // 0 pensa, 1 tem o garfo esquerdo (naive) / faminto (state), 2 come
+  const fork=Array(N).fill(-1);
+  for(let s=0;s<steps;s++){
+    const can=[];
+    for(let i=0;i<N;i++){
+      if(mode==='naive'){
+        const R=(i+1)%N;
+        if(st[i]===0&&fork[i]===-1)can.push(i);
+        else if(st[i]===1&&fork[R]===-1)can.push(i);
+        else if(st[i]===2)can.push(i);
+      }else{
+        const L=(i+N-1)%N,R=(i+1)%N;
+        if(st[i]===0)can.push(i);
+        else if(st[i]===1&&st[L]!==2&&st[R]!==2)can.push(i);
+        else if(st[i]===2)can.push(i);
+      }
+    }
+    if(!can.length)return{deadlock:true,at:s,st:st.slice()};
+    const i=can[Math.floor(rnd()*can.length)],R=(i+1)%N;
+    if(mode==='naive'){
+      if(st[i]===0){fork[i]=i;st[i]=1;}
+      else if(st[i]===1){fork[R]=i;st[i]=2;}
+      else{fork[i]=-1;fork[R]=-1;st[i]=0;}
+    }else{
+      if(st[i]===0)st[i]=1;else if(st[i]===1)st[i]=2;else st[i]=0;
+    }
+  }
+  return{deadlock:false,at:steps,st:st.slice()};
+}
+/* Banker */
+function bankerSafe(avail,alloc,max){
+  const n=alloc.length,m=avail.length,work=avail.slice(),fin=Array(n).fill(false),seq=[];
+  const need=alloc.map((a,i)=>a.map((x,j)=>max[i][j]-x));
+  let prog=true;
+  while(prog){prog=false;
+    for(let i=0;i<n;i++){
+      if(!fin[i]&&need[i].every((x,j)=>x<=work[j])){for(let j=0;j<m;j++)work[j]+=alloc[i][j];fin[i]=true;seq.push(i);prog=true;}
+    }
+  }
+  return{safe:fin.every(Boolean),seq,need};
+}
+function bankerRequest(avail,alloc,max,i,req){
+  const need=alloc.map((a,k)=>a.map((x,j)=>max[k][j]-x));
+  if(req.some((x,j)=>x>need[i][j]))return{ok:false,why:'excede a necessidade máxima declarada'};
+  if(req.some((x,j)=>x>avail[j]))return{ok:false,why:'recursos insuficientes agora (o processo espera)'};
+  const a2=avail.map((x,j)=>x-req[j]),al2=alloc.map(r=>r.slice());al2[i]=al2[i].map((x,j)=>x+req[j]);
+  const r=bankerSafe(a2,al2,max);
+  return r.safe?{ok:true,seq:r.seq,why:'estado resultante é seguro'}:{ok:false,why:'levaria a estado inseguro; o processo espera'};
+}
+/*LOGIC2-END*/
+
+const $=s=>document.querySelector(s);
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+/* ---- highlighter C ---- */
+function hl(src){
+  const re=/(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\])*")|(#\w+[^\n]*)|\b(int|void|char|long|return|if|else|for|while|do|struct|pthread_t|pthread_attr_t|pid_t|sem_t|pthread_mutex_t|const|NULL)\b|\b(\d+)\b/g;
+  return esc(src).replace(re,(m,c,s,p,k,n)=>c?`<span class="c">${c}</span>`:s?`<span class="s">${s}</span>`:p?`<span class="p">${p}</span>`:k?`<span class="k">${k}</span>`:`<span class="n">${n}</span>`);
+}
+const CODE={
+'c-fork':`#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main(void){
+    pid_t pid = fork();
+    if (pid < 0) { perror("fork"); return 1; }
+    if (pid == 0) {                       // filho
+        execlp("ls", "ls", "-l", NULL);   // troca a imagem do processo
+    } else {                              // pai
+        wait(NULL);                       // espera o filho
+        printf("filho terminou\\n");
+    }
+    return 0;
+}`,
+'c-pipe':`int fd[2];
+char buf[32];
+pipe(fd);                       // fd[0] = leitura, fd[1] = escrita
+if (fork() == 0) {              // filho escreve
+    close(fd[0]);
+    write(fd[1], "ola", 4);
+} else {                        // pai le
+    close(fd[1]);
+    read(fd[0], buf, sizeof buf);
+    printf("%s\\n", buf);
+}`,
+'c-pth':`#include <pthread.h>
+#include <stdio.h>
+
+int soma = 0;                          // global: compartilhada
+
+void *runner(void *param) {
+    int n = atoi(param);
+    for (int i = 1; i <= n; i++) soma += i;
+    pthread_exit(0);
+}
+
+int main(int argc, char *argv[]) {
+    pthread_t tid;
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
+    pthread_create(&tid, &attr, runner, argv[1]);
+    pthread_join(tid, NULL);           // sem o join, main imprime cedo demais
+    printf("soma = %d\\n", soma);
+}`,
+'c-sem':`wait(S) {                 // P
+    while (S <= 0) ;      // versao com espera ocupada
+    S--;
+}
+signal(S) {               // V
+    S++;
+}
+
+semaphore mutex = 1;
+wait(mutex);
+    /* secao critica */
+signal(mutex);`,
+'c-bb':`// Produtor                      // Consumidor
+do {                             do {
+  /* produz item */                 wait(full);
+  wait(empty);                      wait(mutex);
+  wait(mutex);                      /* remove item do buffer */
+  /* insere item no buffer */       signal(mutex);
+  signal(mutex);                    signal(empty);
+  signal(full);                     /* consome item */
+} while (true);                  } while (true);`,
+'c-sys':`// O que voce escreve                // O que acontece por baixo
+printf("ola\\n");                     // 1. libc formata o texto
+                                    // 2. libc chama write(1, buf, n)
+                                    // 3. trap: modo usuario -> kernel
+                                    // 4. kernel indexa a tabela de syscalls
+                                    // 5. driver escreve no terminal
+                                    // 6. retorno: modo kernel -> usuario`,
+'c-posix':`#include <semaphore.h>
+#include <pthread.h>
+
+pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER;
+sem_t s;
+
+sem_init(&s, 0, 1);          // 0 = entre threads do processo; valor inicial 1
+pthread_mutex_lock(&m);
+    /* secao critica */
+pthread_mutex_unlock(&m);
+sem_wait(&s);  sem_post(&s);`
+};
+for(const id in CODE){const e=document.getElementById(id);if(e)e.innerHTML=hl(CODE[id]);}
+
+/* ---- gantt ---- */
+const U=26;
+function pcls(p){return p<0?'idle':'pc'+(p%8+1);}
+function ganttHTML(blocks,rows,T,id){
+  const names=rows.map((r,i)=>r.name||('P'+(i+1)));
+  let h=`<div class="g-row"${id?` id="${id}"`:""} style="width:${T*U}px">`;
+  for(const b of blocks){
+    const w=(b.e-b.s)*U;
+    h+=`<div class="g-blk ${pcls(b.p)}" style="width:${w}px" title="${b.p<0?'CPU ociosa':names[b.p]} [${b.s},${b.e})">${b.p<0?(w>40?'idle':''):names[b.p]}</div>`;
+  }
+  h+='</div><div class="g-axis" style="width:'+(T*U)+'px">';
+  const step=T>40?5:T>20?2:1;
+  for(let t=0;t<=T;t+=step)h+=`<span style="width:${step*U}px">${t}</span>`;
+  return h+'</div>';
+}
+
+/* ---- convoy demo ---- */
+(function(){
+  const rows=[{arr:0,burst:24,prio:0},{arr:0,burst:3,prio:0},{arr:0,burst:3,prio:0}];
+  let h='';
+  for(const [lab,order] of [['FCFS: P1, P2, P3',[0,1,2]],['Mais curto primeiro: P2, P3, P1',[1,2,0]]]){
+    const rr=order.map(i=>rows[i]);
+    const s=simulate(rr,'fcfs',1),m=summarize(s,rr);
+    const bl=blocksOf(s,'fcfs',1).map(b=>({...b,p:order[b.p]}));
+    h+=`<div style="margin:14px 0 4px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px"><b>${lab}</b><span class="tag live">espera média = ${m.wait.toFixed(1)}</span></div><div class="gantt">`+ganttHTML(bl,rows,s.T)+'</div>';
+  }
+  $('#convoy').innerHTML=h;
+})();
+
+/* ---- simulator ---- */
+const PRESETS=[
+ {n:'Comboio (24, 3, 3)',a:'fcfs',q:4,r:[[0,24,1],[0,3,1],[0,3,1]]},
+ {n:'SJF: bursts 6, 8, 7, 3',a:'sjf',q:4,r:[[0,6,1],[0,8,1],[0,7,1],[0,3,1]]},
+ {n:'SRTF: chegadas escalonadas',a:'srtf',q:4,r:[[0,8,1],[1,4,1],[2,9,1],[3,5,1]]},
+ {n:'Round Robin q=4',a:'rr',q:4,r:[[0,24,1],[0,3,1],[0,3,1]]},
+ {n:'Prioridade (5 processos)',a:'prio',q:4,r:[[0,10,3],[0,1,1],[0,2,4],[0,1,5],[0,5,2]]},
+ {n:'Prioridade + RR q=2',a:'priorr',q:2,r:[[0,4,3],[0,5,2],[0,8,2],[0,7,1],[0,3,3]]},
+ {n:'CPU ociosa (chegadas tardias)',a:'fcfs',q:4,r:[[2,3,1],[10,1,1],[11,2,1]]}
+];
+let rows=[],cur=0,sim=null,blocks=[];
+$('#s-algo').innerHTML=ALGOS.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
+$('#s-preset').innerHTML=PRESETS.map((p,i)=>`<option value="${i}">${p.n}</option>`).join('');
+function loadPreset(i){
+  const p=PRESETS[i];
+  rows=p.r.map(x=>({arr:x[0],burst:x[1],prio:x[2]}));
+  $('#s-algo').value=p.a;$('#s-q').value=p.q;
+  renderRows();recompute();
+}
+function renderRows(){
+  $('#s-rows').innerHTML=rows.map((r,i)=>`<tr><td><span class="dot ${pcls(i)}"></span>P${i+1}</td>
+   <td><input type="number" min="0" max="40" value="${r.arr}" data-i="${i}" data-k="arr" aria-label="Chegada P${i+1}"></td>
+   <td><input type="number" min="1" max="40" value="${r.burst}" data-i="${i}" data-k="burst" aria-label="Burst P${i+1}"></td>
+   <td><input type="number" min="1" max="9" value="${r.prio}" data-i="${i}" data-k="prio" aria-label="Prioridade P${i+1}"></td></tr>`).join('');
+}
+$('#s-rows').addEventListener('input',e=>{
+  const el=e.target;if(!el.dataset.k)return;
+  let v=parseInt(el.value,10);if(isNaN(v))return;
+  const min=el.dataset.k==='arr'?0:1;rows[el.dataset.i][el.dataset.k]=Math.max(min,Math.min(40,v));
+  recompute();
+});
+$('#s-add').onclick=()=>{if(rows.length<8){rows.push({arr:0,burst:3,prio:1});renderRows();recompute();}};
+$('#s-del').onclick=()=>{if(rows.length>1){rows.pop();renderRows();recompute();}};
+$('#s-algo').onchange=recompute;
+$('#s-q').oninput=recompute;
+$('#s-preset').onchange=e=>loadPreset(+e.target.value);
+function curQ(){return Math.max(1,Math.min(20,parseInt($('#s-q').value,10)||1));}
+function chips(list){return list.length?list.map(i=>`<span class="chip ${pcls(i)}">P${i+1}</span>`).join(''):'<span style="color:var(--muted)">—</span>';}
+function recompute(){
+  const algo=$('#s-algo').value,q=curQ(),A=ALGOS.find(a=>a.id===algo);
+  $('#s-qwrap').style.display=A.q?'':'none';
+  sim=simulate(rows,algo,q);blocks=blocksOf(sim,algo,q);
+  const m=summarize(sim,rows);
+  $('#s-gantt').innerHTML=ganttHTML(blocks,rows,sim.T,'g-row');
+  const sc=$('#s-scrub');sc.max=sim.T;if(+sc.value>sim.T)sc.value=sim.T;
+  $('#s-metrics').innerHTML=[['Espera média',m.wait.toFixed(2)],['Turnaround médio',m.turn.toFixed(2)],['Resposta média',m.resp.toFixed(2)],['Trocas de contexto',m.sw],['Utilização CPU',(m.util*100).toFixed(0)+'%'],['Vazão',m.thr.toFixed(2)+' proc/u.t.']]
+    .map(x=>`<div class="metric"><b>${x[1]}</b><span>${x[0]}</span></div>`).join('');
+  $('#s-table').innerHTML='<tr><th>Proc</th><th>Cheg.</th><th>Burst</th><th>Término</th><th>Espera</th><th>Turnaround</th><th>Resposta</th></tr>'+
+    rows.map((r,i)=>`<tr><td><span class="dot ${pcls(i)}"></span>P${i+1}</td><td>${r.arr}</td><td>${r.burst}</td><td>${sim.fin[i]}</td><td>${m.per[i].wait}</td><td>${m.per[i].turn}</td><td>${m.per[i].resp}</td></tr>`).join('');
+  compare();setT();
+}
+function setT(){
+  const t=+$('#s-scrub').value,n=rows.length;
+  const run=t<sim.T?sim.tl[t]:-2;
+  const ready=[],notYet=[],fin=[];
+  for(let i=0;i<n;i++){
+    if(sim.fin[i]<=t)fin.push(i);
+    else if(rows[i].arr>t)notYet.push(i);
+    else if(i!==run)ready.push(i);
+  }
+  $('#s-read').innerHTML=`<div><em>t = ${t}</em>${run===-2?'fim':run===-1?'CPU ociosa':`<span class="chip ${pcls(run)}">P${run+1}</span> executando`}</div>
+   <div><em>Fila de prontos</em>${chips(ready)}</div><div><em>Ainda não chegaram</em>${chips(notYet)}</div><div><em>Terminados</em>${chips(fin)}</div>`;
+  const row=$('#g-row');
+  if(row){row.classList.add('g-cursor');row.style.setProperty('--cx',(t*U)+'px');}
+}
+$('#s-scrub').oninput=setT;
+function compare(){
+  const q=curQ(),out=ALGOS.map(a=>{const s=simulate(rows,a.id,q);return{a,m:summarize(s,rows)};});
+  for(const [id,k] of [['#cmp-w','wait'],['#cmp-t','turn'],['#cmp-r','resp']]){
+    const mx=Math.max(...out.map(o=>o.m[k]),1);
+    $(id).innerHTML=out.map(o=>`<div class="cmp-row"><span>${o.a.short}</span><div class="cmp-bar"><i style="width:${(o.m[k]/mx*100).toFixed(1)}%"></i></div><span>${o.m[k].toFixed(2)}</span></div>`).join('');
+  }
+}
+
+
+/* ---- unidades em preparação ---- */
+const SOON={
+};
+document.getElementById('soon-host').outerHTML=Object.keys(SOON).map(k=>{const d=SOON[k];
+ return `<section id="v-${k}" data-view="${k}" hidden><div class="spacer"></div><div class="eyebrow">${d.u}</div><h1 style="font-size:2.2rem;margin-top:.3rem">${d.t}</h1>
+ <div class="callout warn"><b>Em preparação</b><p>Os slides desta unidade ainda não estão no projeto. O conteúdo entra assim que eu os ler, na ordem do plano de ensino.</p></div>
+ <h2>Tópicos do plano</h2><div class="scroll"><table class="t">`+d.s.map(x=>`<tr><td style="white-space:nowrap">${x[0]}</td><td><b>${x[1]}</b>${x[2]?'<br><span style="color:var(--muted)">'+x[2]+'</span>':''}</td></tr>`).join('')+`</table></div></section>`;}).join('');
+
+/* ---- ciclo de E/S ---- */
+(function(){
+  const S=['O <b>device driver</b> inicia a E/S, programando o controlador do dispositivo.','O <b>controlador</b> inicia a operação no dispositivo, e a CPU segue executando outra coisa.','A CPU <b>verifica interrupções entre instruções</b>; nada ainda.','O dispositivo termina (entrada pronta, saída concluída ou erro) e o controlador <b>gera o sinal de interrupção</b>.','A CPU recebe a interrupção e <b>transfere o controle ao tratador</b> (via vetor de interrupções).','O tratador <b>processa os dados</b> e retorna da interrupção.','A CPU <b>retoma a tarefa interrompida</b> do ponto exato onde parou.'];
+  let i=0;function d(){$('#io-n').textContent=i+1;$('#io-t').innerHTML=S[i];$('#io-p').disabled=i===0;$('#io-nx').disabled=i===S.length-1;}
+  $('#io-p').onclick=()=>{i--;d();};$('#io-nx').onclick=()=>{i++;d();};d();
+})();
+
+/* ---- state lab ---- */
+(function(){
+  const S=['new','ready','running','waiting','terminated'];
+  const T={new:[['ready','admitido']],ready:[['running','scheduler dispatch']],running:[['ready','interrupção (quantum)'],['waiting','pede E/S ou espera evento'],['terminated','exit()']],waiting:[['ready','E/S concluída']],terminated:[]};
+  const msg={new:'O processo está sendo criado.',ready:'Pronto: tem tudo, só falta a CPU. Fica na fila de prontos.',running:'Executando: instruções sendo executadas na CPU.',waiting:'Esperando um evento (E/S, sinal). Não compete pela CPU.',terminated:'Terminou. Recursos devolvidos ao SO.'};
+  let s='new';
+  function draw(){
+    $('#st-row').innerHTML=S.map(x=>`<span class="st ${x===s?'on':''}">${x}</span>`).join('');
+    $('#st-trans').innerHTML=T[s].length?T[s].map(t=>`<button class="btn" data-to="${t[0]}">→ ${t[0]} <span style="color:var(--muted)">(${t[1]})</span></button>`).join(''):'<button class="btn" data-to="new">Reiniciar</button>';
+    $('#st-msg').textContent=msg[s];
+  }
+  $('#st-trans').onclick=e=>{const b=e.target.closest('button');if(b){s=b.dataset.to;draw();}};
+  draw();
+})();
+
+/* ---- race lab ---- */
+(function(){
+  const A=['LOAD  R1 ← counter','ADD   R1 ← R1 + 1','STORE counter ← R1'],B=['LOAD  R2 ← counter','SUB   R2 ← R2 − 1','STORE counter ← R2'];
+  let mem,pa,pb,r1,r2;
+  function reset(){mem=5;pa=0;pb=0;r1=null;r2=null;draw();}
+  function step(w){
+    if(w==='a'&&pa<3){if(pa===0)r1=mem;else if(pa===1)r1=r1+1;else mem=r1;pa++;}
+    else if(w==='b'&&pb<3){if(pb===0)r2=mem;else if(pb===1)r2=r2-1;else mem=r2;pb++;}
+    draw();
+  }
+  function draw(){
+    const L=(arr,p)=>arr.map((x,i)=>`<div class="ln ${i===p?'cur':''}">${i<p?'✓ ':'· '}${esc(x)}</div>`).join('');
+    $('#rl-a').innerHTML=L(A,pa);$('#rl-b').innerHTML=L(B,pb);
+    $('#rg-a').textContent='R1 = '+(r1===null?'?':r1);$('#rg-b').textContent='R2 = '+(r2===null?'?':r2);
+    $('#rl-mem').textContent=mem;
+    const end=pa===3&&pb===3;
+    $('#rl-verdict').innerHTML=end?(mem===5?'<b style="color:var(--ok)">correto (5)</b>':'<b style="color:var(--bad)">condição de corrida! esperado 5</b>'):'';
+    $('#rl-sa').disabled=pa>=3;$('#rl-sb').disabled=pb>=3;
+  }
+  $('#rl-sa').onclick=()=>step('a');$('#rl-sb').onclick=()=>step('b');$('#rl-rst').onclick=reset;
+  $('#rl-rnd').onclick=()=>{reset();while(pa<3||pb<3){const w=(pa>=3)?'b':(pb>=3)?'a':(Math.random()<.5?'a':'b');step(w);}};
+  reset();
+})();
+
+/* ---- quiz ---- */
+const QI=[
+ {q:'O que garante que o SO retome o controle da CPU quando um programa entra em laço infinito?',o:['O bit de modo','O timer, que gera interrupção ao zerar','O device driver','O spooling'],a:1,w:'O SO programa o timer (instrução privilegiada) antes de dar a CPU ao processo. Ao zerar, a interrupção devolve o controle ao kernel.'},
+ {q:'O que acontece quando um programa de usuário faz uma chamada de sistema?',o:['A CPU vai para modo kernel, o SO executa o serviço e volta a modo usuário','O programa passa a rodar em modo kernel até terminar','O SO é recarregado na memória','Nada: é apenas uma função de biblioteca'],a:0,w:'A chamada executa um trap que muda o bit de modo para kernel; o retorno o restaura. Só assim o usuário acessa serviços privilegiados com segurança.'},
+ {q:'Qual descreve melhor a estrutura do kernel Linux?',o:['Microkernel puro','Camadas estritas','Monolítico, com módulos carregáveis','Sem kernel'],a:2,w:'O Linux roda inteiro em modo kernel num único espaço de endereços (monolítico) e aceita módulos carregáveis (LKM) em tempo de execução.'},
+ {q:'Por que um microkernel costuma ter mais overhead que um kernel monolítico?',o:['Tem mais código em modo kernel','Os componentes em espaço de usuário se comunicam por mensagens, com trocas usuário↔kernel','Não usa interrupções','Não tem escalonador'],a:1,w:'Cada serviço fora do kernel exige troca de mensagens e, às vezes, troca de processo. O ganho é confiabilidade e segurança.'}
+];
+const QZ=[
+ {q:'Qual transição de estado NÃO existe no modelo de cinco estados?',o:['running → waiting','waiting → running','ready → running','running → ready'],a:1,w:'Quando a E/S termina, o processo volta para a fila de prontos (waiting → ready) e só depois o escalonador pode dar a CPU a ele.'},
+ {q:'Após fork(), o valor retornado é…',o:['0 no pai e PID do filho no filho','PID do filho no pai e 0 no filho','Sempre o PID do filho','−1 em ambos'],a:1,w:'O filho recebe 0 (não tem filho recém-criado); o pai recebe o PID do filho para poder esperá-lo com wait().'},
+ {q:'for(i=0;i<3;i++) fork(); — quantos processos existem ao final (contando o original)?',o:['3','4','8','6'],a:2,w:'Cada fork dobra a população: 2³ = 8. Os filhos também executam as iterações restantes do laço.'},
+ {q:'Qual destes é compartilhado entre threads do mesmo processo?',o:['Pilha','Registradores','Variáveis globais','Contador de programa'],a:2,w:'Código, dados globais, heap e arquivos abertos são comuns; pilha, PC e registradores são por thread.'},
+ {q:'Qual algoritmo minimiza o tempo médio de espera (para um conjunto conhecido de bursts)?',o:['FCFS','Round Robin','SJF','Prioridade'],a:2,w:'SJF é provadamente ótimo nessa métrica. O problema prático é que o próximo burst não é conhecido; é estimado.'},
+ {q:'Três processos (24, 3, 3) chegam em t=0 nessa ordem. Qual é o tempo médio de espera no FCFS?',o:['3','13','17','27'],a:2,w:'Esperas: 0, 24 e 27. (0+24+27)/3 = 17. Isso é o efeito comboio.'},
+ {q:'Com n processos e quantum q no Round Robin, o tempo máximo de espera por turno é…',o:['n·q','(n−1)·q','q','n'],a:1,w:'Os outros n−1 processos usam, no máximo, um quantum cada antes de o processo voltar à CPU.'},
+ {q:'Qual condição do problema da seção crítica a alternância estrita (variável turn) viola?',o:['Exclusão mútua','Progresso','Espera limitada','Nenhuma'],a:1,w:'Se é a vez do processo que não quer entrar, o outro fica bloqueado fora da seção crítica sem motivo. Isso fere o progresso.'},
+ {q:'No produtor-consumidor, inverter a ordem wait(mutex) / wait(empty) no produtor pode causar…',o:['Starvation do consumidor, sem deadlock','Deadlock','Nada, a ordem não importa','Race condition'],a:1,w:'Com o buffer cheio o produtor dorme segurando o mutex; o consumidor não consegue entrar para liberar espaço.'},
+ {q:'Inversão de prioridade é resolvida por…',o:['Aging','Herança de prioridade','Aumentar o quantum','Desabilitar interrupções'],a:1,w:'A tarefa de baixa prioridade que segura o lock herda temporariamente a prioridade da que espera por ele. Aging resolve starvation, outro problema.'}
+];
+const QB=QZ.slice();QZ.length=0;
+[].push.apply(QZ,QI.concat([0,1,2,4,5,6,3,7,8,9].map(i=>QB[i])));
+const QD=[{"q": "O trecho \"for (i=1;i<n;i++) if ((childpid = fork()) <= 0) break;\" (ex5), com n = 4, cria…", "o": ["Uma cadeia de 4 processos", "Um leque: 4 processos, todos filhos do original (exceto ele mesmo)", "8 processos", "3 processos"], "a": 1, "w": "Quem sai do laço é o filho; o pai segue criando. O original cria 3 filhos, num total de 4 processos. No ex4, quem sai é o pai, e o resultado é uma cadeia."}, {"q": "Qual destas NÃO é condição necessária para deadlock?", "o": ["Exclusão mútua", "Posse e espera", "Não preempção", "Starvation"], "a": 3, "w": "As quatro condições são exclusão mútua, posse e espera, não preempção e espera circular. Starvation é outro problema de vivacidade."}, {"q": "Requisitar recursos sempre em ordem crescente de uma numeração global elimina qual condição?", "o": ["Exclusão mútua", "Posse e espera", "Não preempção", "Espera circular"], "a": 3, "w": "Com uma ordem total, é impossível formar um ciclo de espera: cada processo só espera por recurso de número maior que o que já tem."}, {"q": "No algoritmo do banqueiro, um estado inseguro significa que…", "o": ["O deadlock já ocorreu", "O deadlock pode ocorrer, mas não é certo", "Nunca haverá deadlock", "Algum processo está em starvation"], "a": 1, "w": "Estado seguro garante uma sequência de término; inseguro não garante. O banqueiro recusa o pedido que leva a estado inseguro para evitar esse risco."}, {"q": "Por que os filósofos que pegam o garfo esquerdo e depois o direito podem entrar em deadlock?", "o": ["Há garfos demais", "Se todos pegam o esquerdo ao mesmo tempo, forma-se espera circular", "O mutex global impede a execução", "O semáforo foi iniciado em 0"], "a": 1, "w": "Todos seguram um garfo (posse) e esperam o outro, que está com o vizinho: espera circular."}, {"q": "Na solução de leitores e escritores com prioridade dos leitores, quem pode sofrer starvation?", "o": ["Os leitores", "Os escritores", "Ninguém", "O processo que usa mutex"], "a": 1, "w": "Enquanto sempre houver um novo leitor entrando, o contador rc nunca chega a 0 e o escritor não consegue o db."}, {"q": "No problema do pombo correio, para que serve o semáforo \"enchendo\", iniciado em N = 20?", "o": ["Limitar a 20 as mensagens por viagem (semáforo contador)", "Exclusão mútua da variável contaPostIt", "Acordar o pombo", "Impedir que o pombo saia"], "a": 0, "w": "Ele representa as vagas na mochila: cada usuário consome uma; o pombo as restaura (20 up) depois da viagem."}];
+const QM=[{"q": "Qual fragmentação ainda existe na paginação pura?", "o": ["Nenhuma", "Externa", "Interna, na última página do processo", "Interna e externa, em igual medida"], "a": 2, "w": "Quadros e páginas têm o mesmo tamanho fixo, então não há buracos externos; mas a última página raramente é preenchida por completo."}, {"q": "Páginas de 4 bytes; tabela: pág. 0→quadro 5, 1→6, 2→1, 3→2. Qual o endereço físico do endereço lógico 13?", "o": ["9", "13", "21", "29"], "a": 0, "w": "13 = página 3, deslocamento 1. A página 3 está no quadro 2: 2×4 + 1 = 9."}, {"q": "Qual é a anomalia de Belady?", "o": ["Aumentar os quadros pode aumentar as faltas de página (FIFO)", "A TLB perder entradas ao trocar de processo", "LRU gerar mais faltas que FIFO", "A tabela de páginas crescer com o espaço lógico"], "a": 0, "w": "Com FIFO, a string 1,2,3,4,1,2,5,1,2,3,4,5 tem 9 faltas com 3 quadros e 10 com 4."}, {"q": "Por que o algoritmo ótimo de substituição de páginas não é usado de verdade?", "o": ["É lento demais", "Exige conhecer as referências futuras", "Só funciona sem memória virtual", "Gera mais faltas que o FIFO"], "a": 1, "w": "Ele remove a página que ficará mais tempo sem uso: é preciso conhecer o futuro. Serve como referência para medir os outros."}, {"q": "Qual é o último passo do tratamento de um page fault?", "o": ["Escolher uma vítima", "Zerar o quadro", "Reiniciar a instrução que causou a falta", "Atualizar o PTBR"], "a": 2, "w": "Depois de trazer a página, atualizar as tabelas e pôr o bit em válido, a instrução é reiniciada sem que o programa perceba."}, {"q": "Qual é a vantagem do copy-on-write após um fork()?", "o": ["O filho executa mais rápido que o pai", "Páginas só são copiadas quando alguém escreve nelas", "O pai fica suspenso até o filho terminar", "Elimina a necessidade de tabela de páginas"], "a": 1, "w": "Pai e filho compartilham as páginas; a cópia só acontece na primeira escrita. Muitos filhos chamam exec() logo, e a cópia inteira seria desperdício."}, {"q": "Com o i-node de 12 ponteiros diretos e blocos de 4 KB, até que tamanho um arquivo é acessado sem bloco indireto?", "o": ["12 KB", "48 KB", "4 MB", "4 GB"], "a": 1, "w": "12 × 4 KB = 48 KB. O indireto simples acrescenta 1024 × 4 KB = 4 MB (ponteiros de 4 bytes)."}, {"q": "Quantas interrupções uma transferência por DMA gera?", "o": ["Uma por byte", "Uma por palavra", "Uma por bloco, ao final", "Nenhuma"], "a": 2, "w": "O controlador de DMA move o bloco direto para a memória e interrompe a CPU uma vez, ao terminar."}, {"q": "Saída de vários jobs para uma impressora, que só atende uma requisição por vez, é um caso de…", "o": ["Caching", "Double buffering", "Spooling", "Polling"], "a": 2, "w": "Spooling retém a saída de cada job (em disco) e a entrega ao dispositivo, sobrepondo a saída de um job com outros."}, {"q": "Com a cabeça em 53 e a fila 98, 183, 37, 122, 14, 124, 65, 67, qual algoritmo faz o menor movimento entre FCFS e SSTF?", "o": ["FCFS (640)", "SSTF (236)", "Os dois empatam", "Depende do sentido"], "a": 1, "w": "SSTF atende sempre o mais próximo: 236 cilindros contra 640 do FCFS, ao custo de possível starvation das requisições distantes."}, {"q": "Qual é a permissão rwxrw---x em octal?", "o": ["761", "751", "641", "672"], "a": 0, "w": "Dono rwx = 7; grupo rw- = 6; público --x = 1."}];
+[].push.apply(QZ,QD.concat(QM));
+let qAns=Array(QZ.length).fill(null);
+function drawQuiz(){
+  $('#quiz').innerHTML=QZ.map((x,i)=>`<div class="card q"><b>${i+1}. ${esc(x.q)}</b><div class="opts">`+x.o.map((o,j)=>{
+    const a=qAns[i];let c='';if(a!==null){if(j===x.a)c='ok';else if(j===a)c='bad';}
+    return `<button class="opt ${c}" data-q="${i}" data-o="${j}" ${a!==null?'disabled':''}>${esc(o)}</button>`;}).join('')+
+    `</div>${qAns[i]!==null?`<div class="why"><b>${qAns[i]===x.a?'Certo.':'Não é essa.'}</b> ${esc(x.w)}</div>`:''}</div>`).join('');
+  const d=qAns.filter(x=>x!==null).length,ok=qAns.filter((x,i)=>x===QZ[i].a).length;
+  $('#q-score').textContent=ok+' / '+d+' (de '+QZ.length+')';
+}
+$('#quiz').onclick=e=>{const b=e.target.closest('.opt');if(!b)return;qAns[+b.dataset.q]=+b.dataset.o;drawQuiz();};
+$('#q-reset').onclick=()=>{qAns=Array(QZ.length).fill(null);drawQuiz();};
+drawQuiz();
+
+/* ---- router ---- */
+const VIEWS=['inicio','intro','processos','escalonamento','simulador','threads','sincronizacao','ipc','deadlock','memoria','arquivos','es','teste'];
+function route(){
+  let h=(location.hash||'').replace('#','');if(!VIEWS.includes(h))h='inicio';
+  document.querySelectorAll('[data-view]').forEach(s=>s.hidden=s.dataset.view!==h);
+  document.querySelectorAll('[data-nav]').forEach(a=>a.classList.toggle('on',a.dataset.nav===h));
+  window.scrollTo(0,0);
+  if(h==='simulador')setT();
+}
+window.addEventListener('hashchange',route);
+loadPreset(0);route();
+
+/* ================= LABS UNIDADES 5–7 ================= */
+const nums=s=>(s.match(/\d+/g)||[]).map(Number);
+/* ---- alocação dinâmica ---- */
+(function(){
+  function parseInit(s){return s.trim().split(/\s+/).map(t=>{const m=t.split(':');return{n:m[0]==='-'?null:m[0],s:+m[1]||0};}).filter(b=>b.s>0);}
+  function parseOps(s){return s.split('\n').map(l=>l.trim().split(/\s+/)).filter(a=>a[0]).map(a=>a[0]==='alloc'?{t:'alloc',n:a[1],s:+a[2]}:{t:'free',n:a[1]});}
+  function bar(b){const tot=b.reduce((x,y)=>x+y.s,0)||1;
+    return '<div class="g-row" style="min-width:0;width:100%">'+b.map((x,i)=>`<div class="g-blk ${x.n===null?'idle':'pc'+((x.n.charCodeAt(0)%8)+1)}" style="width:${x.s/tot*100}%;font-size:.7rem;overflow:hidden" title="${x.n||'livre'} ${x.s} KB">${x.n||''} ${x.s}</div>`).join('')+'</div>';}
+  function run(){
+    const init=parseInit($('#al-init').value),ops=parseOps($('#al-ops').value);let h='';
+    for(const [st,lab] of [['first','First-fit'],['best','Best-fit'],['worst','Worst-fit']]){
+      let b=init;h+=`<div style="margin:12px 0 4px"><b>${lab}</b></div><div class="scroll"><div style="min-width:460px"><div style="margin:4px 0"><span class="tag">inicial</span>${bar(b)}</div>`;
+      for(const o of ops){const r=allocOp(b,o,st);b=r.b;
+        h+=`<div style="margin:4px 0"><span class="tag ${r.ok?'':'soon'}">${o.t} ${o.n}${o.t==='alloc'?' '+o.s:''}${r.ok?'':' (não coube)'}</span>${bar(b)}</div>`;}
+      h+='</div></div>';
+    }
+    $('#al-out').innerHTML=h;
+  }
+  $('#al-init').oninput=run;$('#al-ops').oninput=run;run();
+})();
+/* ---- paginação ---- */
+(function(){
+  const K=1024;
+  const P=[
+   {n:'Slide: páginas de 4 B (13 → 9)',size:4,pt:[5,6,1,2],a:13},
+   {n:'Slide: 64 KB lógico, páginas de 4 KB (20500)',size:4*K,pt:[2,1,6,0,4,3,null,null,null,5,null,7,null,null,null,null],a:20500},
+   {n:'Exercício 12: quadros de 2 KB',size:2*K,pt:[20,40,100,10,null,null,1000],a:3*2*K+10},
+   {n:'Exercício 13: páginas de 1 KB',size:K,pt:[3,1,null,null,2,null,0,null],a:6500}
+  ];
+  $('#pg-pre').innerHTML=P.map((p,i)=>`<option value="${i}">${p.n}</option>`).join('');
+  function draw(){
+    const p=P[+$('#pg-pre').value],a=+$('#pg-addr').value||0,t=translate(a,p.size,p.pt);
+    $('#pg-tab').innerHTML='<tr><th>Página</th><th>Quadro</th></tr>'+p.pt.map((f,i)=>`<tr style="${i===t.p?'background:var(--accent-soft)':''}"><td>${i}</td><td>${f===null?'— (não residente)':f}</td></tr>`).join('');
+    $('#pg-out').innerHTML=t.err?`<b style="color:var(--bad)">${t.err}</b>`:
+     `Página <b>${t.p}</b>, deslocamento <b>${t.d}</b> → `+(t.fault?'<b style="color:var(--bad)">PAGE FAULT</b> (página fora da memória)':`quadro <b>${t.f}</b> → endereço físico <b>${t.phys}</b> <span style="color:var(--muted)">(${t.f} × ${p.size} + ${t.d})</span>`);
+  }
+  $('#pg-pre').onchange=()=>{$('#pg-addr').value=P[+$('#pg-pre').value].a;draw();};
+  $('#pg-addr').oninput=draw;$('#pg-addr').value=P[0].a;draw();
+})();
+/* ---- substituição de páginas ---- */
+(function(){
+  const P=[{n:'Slides (3 quadros: FIFO 15, OPT 9, LRU 12)',r:'7,0,1,2,0,3,0,4,2,3,0,3,0,3,2,1,2,0,1,7,0,1',n_:3},{n:'Belady (FIFO: 3 quadros = 9, 4 quadros = 10)',r:'1,2,3,4,1,2,5,1,2,3,4,5',n_:3}];
+  $('#rp-pre').innerHTML=P.map((p,i)=>`<option value="${i}">${p.n}</option>`).join('');
+  function draw(){
+    const ref=nums($('#rp-ref').value),n=Math.max(1,Math.min(7,+$('#rp-n').value||1)),al=$('#rp-algo').value;
+    if(!ref.length){$('#rp-tab').innerHTML='';return;}
+    const r=pageSim(ref,n,al);
+    let h='<tr><th>ref</th>'+r.steps.map(s=>`<td style="font-weight:600">${s.p}</td>`).join('')+'</tr>';
+    for(let k=0;k<n;k++)h+=`<tr><th>quadro ${k}</th>`+r.steps.map(s=>{const v=s.frames[k];return `<td style="${v!==undefined&&s.fault&&(s.victim!==null?v===s.p:k===s.frames.length-1)?'background:var(--warn-soft);font-weight:600':''}">${v===undefined?'':v}</td>`;}).join('')+'</tr>';
+    h+='<tr><th>falta</th>'+r.steps.map(s=>`<td style="color:${s.fault?'var(--bad)':'var(--ok)'}">${s.fault?'✗':'✓'}</td>`).join('')+'</tr>';
+    $('#rp-tab').innerHTML=h;
+    const all=['fifo','lru','opt'].map(a=>[a.toUpperCase(),pageSim(ref,n,a).faults]);
+    $('#rp-met').innerHTML=`<div class="metric"><b>${r.faults}</b><span>faltas (${al.toUpperCase()})</span></div>`+all.map(x=>`<div class="metric"><b>${x[1]}</b><span>${x[0]} · ${n} quadros</span></div>`).join('')+`<div class="metric"><b>${(r.faults/ref.length*100).toFixed(0)}%</b><span>taxa de faltas</span></div>`;
+  }
+  $('#rp-pre').onchange=()=>{const p=P[+$('#rp-pre').value];$('#rp-ref').value=p.r;$('#rp-n').value=p.n_;draw();};
+  ['#rp-ref','#rp-n'].forEach(s=>$(s).oninput=draw);$('#rp-algo').onchange=draw;
+  $('#rp-ref').value=P[0].r;draw();
+})();
+/* ---- escalonamento de disco ---- */
+(function(){
+  function draw(){
+    const q=nums($('#dk-q').value).filter(x=>x<=199),h=Math.min(199,+$('#dk-h').value||0),up=$('#dk-dir').value==='1';
+    const L=[['fcfs','FCFS'],['sstf','SSTF'],['scan','SCAN'],['cscan','C-SCAN']];
+    const res=L.map(l=>({l:l[1],...diskSched(q,h,199,l[0],up)})),mx=Math.max(...res.map(r=>r.total),1);
+    $('#dk-out').innerHTML=res.map(r=>`<div style="margin:10px 0 2px"><b>${r.l}</b> <span style="color:var(--muted);font-size:.85rem">${h} → ${r.order.join(' → ')}</span></div><div class="cmp-row"><span></span><div class="cmp-bar"><i style="width:${r.total/mx*100}%"></i></div><span>${r.total}</span></div>`).join('');
+  }
+  ['#dk-q','#dk-h'].forEach(s=>$(s).oninput=draw);$('#dk-dir').onchange=draw;draw();
+})();
+/* ---- i-node ---- */
+(function(){
+  const fmt=b=>b>=2**40?(b/2**40).toFixed(2).replace(/\.00$/,'')+' TB':b>=2**30?(b/2**30).toFixed(2).replace(/\.00$/,'')+' GB':b>=2**20?(b/2**20).toFixed(2).replace(/\.00$/,'')+' MB':b>=1024?(b/1024).toFixed(0)+' KB':b+' B';
+  function draw(){
+    const b=+$('#in-b').value,p=+$('#in-p').value,d=Math.max(0,+$('#in-d').value||0),r=inodeMax(b,p,d);
+    const tot=r.direct+r.single+r.double+r.triple;
+    $('#in-out').innerHTML=[['Ponteiros por bloco',r.k],['Diretos',fmt(r.direct)],['Indireto simples',fmt(r.single)],['Indireto duplo',fmt(r.double)],['Indireto triplo',fmt(r.triple)],['Máximo (soma)',fmt(tot)]].map(x=>`<div class="metric"><b style="font-size:1.15rem">${x[1]}</b><span>${x[0]}</span></div>`).join('');
+  }
+  ['#in-b','#in-p'].forEach(s=>$(s).onchange=draw);$('#in-d').oninput=draw;draw();
+})();
+/* ---- chmod ---- */
+(function(){
+  const cb=[...document.querySelectorAll('.pm')];
+  function draw(){
+    let o='',s='';
+    for(let g=0;g<3;g++){let v=0;for(let k=0;k<3;k++){const c=cb[g*3+k].checked;if(c)v+=[4,2,1][k];s+=c?'rwx'[k]:'-';}o+=v;}
+    $('#pm-out').innerHTML=`<b>${o}</b> &nbsp; <span style="color:var(--muted)">${s}</span> &nbsp; chmod ${o} arquivo`;
+  }
+  cb.forEach(c=>c.onchange=draw);draw();
+})();
+/* ---- exercícios de memória (com resolução) ---- */
+(function(){
+  const E=[
+   ['Ex. 2 (lista de memória): 40 KB de memória, SO de 10 KB, programa de 20 KB, alocação contígua. Qual a taxa de subutilização?','SO + programa = 30 KB = ¾ da memória. Sobram 10 KB livres: <b>25%</b> de subutilização.'],
+   ['Ex. 6: partições P1=8, P2=24, P3=32 KB (estática relocável). Fragmentação interna após carregar PA, PB e PC: (a) 6, 20, 28 KB; (b) 4, 16, 26 KB; (c) 8, 24, 32 KB.','Interna = tamanho da partição − tamanho do programa. (a) 2, 4 e 4 KB. (b) 4, 8 e 6 KB. (c) nenhuma. <span style="color:var(--muted)">(gabarito do professor)</span>'],
+   ['Ex. 11: use o laboratório de alocação dinâmica acima (já vem carregado) e compare as três estratégias.','Best-fit e first-fit colocam D (6 KB) no buraco de 10 KB; worst-fit usa o de 26 KB. Em E (4 KB): best-fit usa o buraco exato de 4 KB; first-fit usa o de 5 KB (deixando 1 KB); worst-fit usa o maior (20 KB, sobrando 16 KB).'],
+   ['Ex. 12 (memória virtual): quadros de 2 KB; tabela: pág. 0→20, 1→40, 2→100, 3→10, 6→1000 (4 e 5 não residentes). (a) endereço físico do último byte da página 3; (b) do primeiro byte da página 2; (c) deslocamento 10 na página 3; (d) páginas na memória.','(a) 10×2048 + 2047 = <b>22527</b>. (b) 100×2048 = <b>204800</b>. (c) 10×2048 + 10 = <b>20490</b>. (d) páginas <b>0, 1, 2, 3 e 6</b>. <span style="color:var(--muted)">(Confira no laboratório de tradução.)</span>'],
+   ['Ex. 13: páginas de 1.024 endereços, 8 páginas virtuais, 4.096 bytes de memória real; tabela: 0→3, 1→1, 4→2, 6→0 (2, 3, 5 e 7 não residentes). (a) faixas que causam page fault; (b) endereço real de 0, 1023, 1024, 6500 e 3728.','(a) páginas 2, 3, 5 e 7: <b>2048–4095, 5120–6143 e 7168–8191</b>. (b) 0 → <b>3072</b>; 1023 → <b>4095</b>; 1024 → <b>1024</b>; 6500 (pág. 6, desloc. 356) → <b>356</b>; 3728 está na página 3 → <b>page fault</b>.'],
+   ['Ex. 16: endereços de 16 bits e tabela com no máximo 256 entradas (páginas presentes: 0, 1, 2, 3, 4, 5, 9 e 11). Para os endereços 307, 2049 e 2304: página, deslocamento e se está na memória.','256 entradas ⇒ 8 bits de página e 8 de deslocamento (páginas de 256 bytes). 307 = pág. <b>1</b>, desloc. <b>51</b>, <b>presente</b>. 2049 = pág. <b>8</b>, desloc. <b>1</b>, <b>ausente</b> (8 não está na tabela). 2304 = pág. <b>9</b>, desloc. <b>0</b>, <b>presente</b>. <span style="color:var(--muted)">(resolução minha; confira com o professor)</span>']
+  ];
+  $('#ex-mem').innerHTML=E.map((e,i)=>`<details class="card" style="margin:8px 0"><summary style="cursor:pointer"><b>${e[0]}</b></summary><p style="margin-bottom:0">${e[1]}</p></details>`).join('');
+})();
+
+/* ================= EXERCÍCIOS DO PROFESSOR + LABS (U2, U3, U4) ================= */
+function exList(el,arr){
+  el.innerHTML=arr.map(e=>`<details class="card" style="margin:8px 0"><summary style="cursor:pointer"><b>${e.t}</b></summary>${e.i?`<p style="margin:.6em 0 0">${e.i}</p>`:''}<pre class="code">${hl(e.c)}</pre><p style="margin:.2em 0 0">${e.w}</p></details>`).join('');
+}
+exList($('#ex-proc'),[
+ {t:'ex1: identificadores do processo',c:String.raw`#include <stdio.h>
+#include <unistd.h>
+
+int main (void) {
+    printf("I am process %ld\n", (long)getpid());
+    printf("My parent is %ld\n", (long)getppid());
+    printf("My real user ID is       %5ld\n", (long)getuid());
+    printf("My effective user ID is  %5ld\n", (long)geteuid());
+    printf("My real group ID is      %5ld\n", (long)getgid());
+    printf("My effective group ID is %5ld\n", (long)getegid());
+    return 0;
+}`,w:'Chamadas de sistema que só <i>consultam</i> o kernel. O pai do seu programa é o <b>shell</b> que o executou. UID/GID <i>efetivos</i> diferem dos reais em programas com <code>setuid</code>.'},
+ {t:'ex2: o que cada processo imprime?',c:String.raw`int main(void) {
+    int x;
+    x = 0;
+    fork();
+    x = getppid();
+    printf("I am process %ld and my x is %d\n", (long)getpid(), x);
+    return 0;
+}`,w:'<b>Dois</b> processos executam as linhas depois do <code>fork()</code>. Cada um tem a <i>sua cópia</i> de <code>x</code> (espaços de endereço separados): no pai, <code>x</code> = PID do shell; no filho, <code>x</code> = PID do pai. Atribuir <code>x</code> em um não altera o outro.'},
+ {t:'ex3: separar pai e filho pelo retorno do fork',c:String.raw`pid_t childpid;
+childpid = fork();
+if (childpid == -1) {            // erro
+    perror("Failed to fork");
+    return 1;
+}
+if (childpid == 0)
+    printf("I am child %ld\n", (long)getpid());
+else
+    printf("I am parent %ld\n", (long)getpid());`,w:'<code>fork()</code> devolve <b>0 no filho</b>, o <b>PID do filho no pai</b> e <b>−1</b> em erro. A ordem das duas linhas depende do escalonador e <b>não é garantida</b>.'},
+ {t:'ex4: cadeia de processos',c:String.raw`pid_t childpid = 0;
+int i, n = atoi(argv[1]);
+for (i = 1; i < n; i++)
+    if (childpid = fork())    // pai (retorno != 0) sai do laço
+        break;
+fprintf(stderr, "i:%d  process ID:%ld  parent ID:%ld  child ID:%ld\n",
+        i, (long)getpid(), (long)getppid(), (long)childpid);`,w:'Aqui quem sai do laço é o <b>pai</b>; o <b>filho continua</b> e cria o próximo. Resultado: uma <b>cadeia</b> de <i>n</i> processos (cada um com um filho, exceto o último). Use o laboratório acima.'},
+ {t:'ex5: leque de processos',c:String.raw`for (i = 1; i < n; i++)
+    if ((childpid = fork()) <= 0)   // só o filho (ou erro) sai do laço
+        break;
+fprintf(stderr, "i:%d  process ID:%ld  parent ID:%ld  child ID:%ld\n",
+        i, (long)getpid(), (long)getppid(), (long)childpid);`,w:'Agora quem sai é o <b>filho</b>; o pai continua criando. Todos os filhos têm o <b>mesmo pai</b>: um <b>leque</b> de <i>n</i> processos. Diferença para o ex4: troca o teste do <code>if</code> (e quem executa o <code>break</code>).'},
+ {t:'ex6: o pai espera os filhos',c:String.raw`pid_t r_wait(int *stat_loc){
+    int retval;
+    while (((retval = wait(stat_loc)) == -1) && (errno == EINTR));
+    return retval;
+}
+...
+for (i = 1; i < n; i++)
+    if ((childpid = fork()) <= 0)
+        break;
+while (r_wait(NULL) > 0);     // espera todos os filhos
+fprintf(stderr, "i:%d proc ID:%ld parent ID:%ld  child ID:%ld\n",
+        i, (long)getpid(), (long)getppid(), (long)childpid);`,w:'Igual ao ex5, mas o pai só imprime depois de recolher <b>todos</b> os filhos, então a linha dele sai <b>por último</b>. <code>r_wait</code> repete o <code>wait()</code> se um <b>sinal</b> o interromper (<code>errno == EINTR</code>). Sem o <code>wait</code>, os filhos podem virar <b>zumbis</b> ou <b>órfãos</b>.'},
+ {t:'ex7 e ex8: fork + exec + wait',c:String.raw`childpid = fork();
+if (childpid == -1) { perror("Failed to fork\n"); return 1; }
+if (childpid == 0) {
+    execl("/bin/ls", "ls", "-l", NULL);       // troca a imagem do filho
+    perror("Child failed to exec ls\n");      // só chega aqui se o exec falhar
+    return 1;
+}
+if (childpid != wait(NULL)) {                 // pai espera o filho
+    perror("Parent failed to wait due to signal or error\n");
+    return 1;
+}`,w:'É o que o <b>shell</b> faz (aula 1.3): <code>fork</code> cria o processo e <code>exec</code> carrega o programa nele. Se <code>execl</code> dá certo, <b>não retorna</b>; por isso o <code>perror</code> logo depois só roda em caso de falha. O ex8 é a versão cuidadosa do ex7: confere erros e se o <code>wait</code> devolveu mesmo o filho esperado.'}
+]);
+exList($('#ex-thr'),[
+ {t:'ex1: threads compartilham variáveis globais',c:String.raw`int global;
+void *thr_func(void *arg){
+    global = 40;
+    printf("Nova thread: %d\n", global);
+    return NULL;
+}
+int main(void){
+    pthread_t tid;
+    global = 20;
+    printf("Thread principal: %d\n", global);
+    pthread_create(&tid, NULL, thr_func, NULL);
+    pthread_join(tid, NULL);
+    printf("Thread principal: %d\n", global);
+}`,w:'Saída: <code>20</code>, <code>40</code>, <code>40</code>. A thread altera a <b>mesma</b> variável que o <code>main</code> vê. Compare com o ex2 de fork: lá cada processo tem sua cópia. O <code>join</code> garante que o <code>main</code> só leia depois da escrita.'},
+ {t:'ex2: duas threads, sem fim',c:String.raw`void *print_xs(void* unused){
+    while (1) fputc('x', stderr);
+    return NULL;
+}
+int main(){
+    pthread_t thread_id;
+    pthread_create(&thread_id, NULL, &print_xs, NULL);
+    while (1) fputc('o', stderr);
+}`,w:'A saída é uma mistura imprevisível de <code>x</code> e <code>o</code>: o escalonador alterna as threads (preempção). Mostra <b>concorrência</b>. Pare com Ctrl+C.'},
+ {t:'ex3: criar 10 threads (sem join)',c:String.raw`void *PrintHello(void *threadid){
+    int tid = (int)(long int)threadid;
+    printf("Hello World! It's me, thread #%d!\n", tid);
+    pthread_exit(NULL);
+}
+int main(int argc, char *argv[]){
+    pthread_t threads[10];
+    long int t;
+    for (t = 0; t < 10; t++){
+        printf("In main: creating thread %ld\n", t);
+        pthread_create(&threads[t], NULL, PrintHello, (void *)t);
+    }
+    pthread_exit(NULL);
+}`,w:'O argumento é passado <b>por valor</b> (<code>(void *)t</code>), não por endereço: se fosse <code>&amp;t</code>, as threads leriam uma variável que o laço continua alterando (<b>condição de corrida</b>). O <code>main</code> termina com <code>pthread_exit</code>, e não com <code>return</code>: assim o processo continua até as threads acabarem. Se ele fizesse <code>return</code>/<code>exit</code>, o processo morreria e as threads poderiam nem imprimir. A ordem das mensagens varia.'},
+ {t:'ex4: criar threads sob demanda',c:String.raw`void *PrintHello(void *name){
+    while(1){
+        printf("Hello World! It's me, thread %s!, (thread: %x)\n", name, pthread_self());
+        sleep(1);
+    }
+}
+int main(int argc, char *argv[]){
+    pthread_t thread[100];
+    int i = 0;
+    char *name;
+    while (1){
+        name = (char *)malloc(80*sizeof(char));   // um buffer por thread
+        scanf("%s", name);
+        pthread_create(&thread[i], NULL, PrintHello, (void *)name);
+        i += 1;
+    }
+}`,w:'Cada thread recebe seu <b>próprio</b> <code>malloc</code> com o nome; se todas usassem o mesmo vetor, o <code>scanf</code> seguinte sobrescreveria o nome das já criadas. Cuidados: <code>pthread_self()</code> com <code>%x</code> não é portável (o <code>pthread_t</code> é opaco; gera <i>warning</i>), e o vetor tem só 100 posições.'},
+ {t:'ex5: criar e esperar (join)',c:String.raw`for (t = 0; t < 10; t++){
+    printf("In main: creating thread %ld\n", t);
+    pthread_create(&threads[t], NULL, PrintHello, (void *)t);
+}
+for (t = 0; t < 10; t++){
+    pthread_join(threads[t], NULL);
+    printf("Thread %ld terminated.\n", t);
+}
+printf("All threads terminated.\n");`,w:'Versão do ex3 com <code>pthread_join</code>: o <code>main</code> espera <b>na ordem 0..9</b>, então "Thread t terminated" sai em ordem, mesmo que as threads tenham acabado em outra ordem. "All threads terminated." sempre sai por último.'}
+]);
+exList($('#ex-sync'),[
+ {t:'Problema 1: cinco processos escrevem em sequência',i:'Processo 1 escreve 1..200, o 2 escreve 201..400 etc. O processo <i>i+1</i> só começa depois que o <i>i</i> terminou. <b>Ideia</b>: semáforos iniciados em <b>0</b> funcionam como <i>sinal de evento</i>: quem espera dá <code>down</code> e bloqueia até que o anterior dê <code>up</code>.',c:String.raw`Semaphore S1, S2, S3, S4;   S1 = S2 = S3 = S4 = 0
+
+P0:  imprime 1..200
+     UP(S1);
+Pi:  DOWN(Si);                          // espera o anterior
+     imprime i*200+1 .. (i+1)*200
+     UP(Si+1);`,w:'Cada semáforo é uma "passagem" de um processo para o próximo. Nenhuma exclusão mútua é necessária: a ordem é <b>sincronização de execução</b> (precedência).'},
+ {t:'Problema 2: grafo de precedência',i:'A e B executam primeiro; C só depois de A <b>e</b> B; D e E só depois de C.',c:String.raw`semaphore S1=0, S2=0, S3=0
+
+Process A:  // trabalho            V(S1)
+Process B:  // trabalho            V(S2)
+Process C:  P(S1)  P(S2)           // espera A e B
+            // trabalho
+            V(S3)  V(S3)           // libera D e E
+Process D:  P(S3)  // trabalho
+Process E:  P(S3)  // trabalho`,w:'C faz <b>dois</b> <code>P</code> (um por predecessor) e <b>dois</b> <code>V(S3)</code> (um por sucessor). Cada aresta do grafo vira uma unidade de um semáforo.'},
+ {t:'Problema 3: pombo correio',i:'Um pombo leva 20 mensagens por vez de A para B. Usuários colam post-its na mochila; o 20º acorda o pombo; com o pombo fora, os usuários esperam. Três papéis, três semáforos.',c:String.raw`#define N 20
+int contaPostIt = 0;
+semaforo mutex = 1;      // protege contaPostIt
+semaforo cheia = 0;      // o pombo dorme enquanto nao ha 20 msgs
+semaforo enchendo = N;   // limita a 20 usuarios por viagem
+
+pombo() { while (true) {
+    down(cheia);
+    down(mutex);
+    leva_mochila_ate_B_e_volta();
+    contaPostIt = 0;
+    for (i = 0; i < N; i++) up(enchendo);   // libera 20 vagas
+    up(mutex);
+} }
+usuario() { while (true) {
+    down(enchendo);                          // vaga na mochila?
+    down(mutex);
+    colaPostIt_na_mochila();
+    contaPostIt++;
+    if (contaPostIt == N) up(cheia);         // o 20o acorda o pombo
+    up(mutex);
+} }`,w:'<code>mutex</code> = exclusão mútua; <code>cheia</code> = sincronização (acordar o pombo); <code>enchendo</code> = <b>semáforo contador</b> que representa vagas. A ordem importa: o usuário pede a <i>vaga</i> antes do <code>mutex</code>.'},
+ {t:'Problema 4: leitores e escritores (prioridade dos leitores)',i:'Vários leitores podem ler juntos; o escritor precisa de acesso <b>exclusivo</b>. O primeiro leitor bloqueia o banco para escritores; o último o libera.',c:String.raw`int rc = 0;              // leitores ativos
+Semaphore mutex = 1;     // protege rc
+Semaphore db = 1;        // acesso ao banco
+
+Escritor:                    Leitor:
+  down(db);                    down(mutex);
+  // escreve                   rc++;
+  up(db);                      if (rc == 1) down(db);   // 1o leitor
+                               up(mutex);
+                               // le
+                               down(mutex);
+                               rc--;
+                               if (rc == 0) up(db);     // ultimo leitor
+                               up(mutex);`,w:'Problema: se sempre chegam novos leitores, <code>rc</code> nunca chega a 0 e o escritor sofre <b>starvation</b>. É o que o problema 5 resolve.'},
+ {t:'Problema 5: leitores e escritores (prioridade dos escritores)',i:'Quando há um escritor esperando, nenhum leitor novo entra.',c:String.raw`rc = 0; wc = 0;
+mutex_rc = mutex_wc = mutex = w_db = r_db = 1;
+
+Escritor:                        Leitor:
+  down(mutex_wc);                  down(mutex);
+  wc++;                            down(r_db);          // barrado se ha escritor
+  if (wc == 1) down(r_db);         down(mutex_rc);
+  up(mutex_wc);                    rc++;
+  down(w_db);                      if (rc == 1) down(w_db);
+  // escreve                       up(mutex_rc);
+  up(w_db);                        up(r_db);
+  down(mutex_wc);                  up(mutex);
+  wc--;                            // le
+  if (wc == 0) up(r_db);           down(mutex_rc);
+  up(mutex_wc);                    rc--;
+                                   if (rc == 0) up(w_db);
+                                   up(mutex_rc);`,w:'O primeiro escritor fecha <code>r_db</code>: novos leitores bloqueiam na entrada. O último escritor reabre. Agora podem sofrer starvation os <b>leitores</b>. Nada é de graça: prioridade para um lado atrasa o outro.'},
+ {t:'Problema 6: barbeiro dorminhoco',i:'Sala de espera com n cadeiras; barbeiro dorme se não há clientes; cliente vai embora se todas as cadeiras estão ocupadas.',c:String.raw`#define CHAIRS 5
+semaphore customers = 0;  // clientes esperando
+semaphore barbers = 0;    // barbeiros prontos
+semaphore mutex = 1;
+int waiting = 0;
+
+void barber(void) { while (TRUE) {
+    down(customers);          // dorme se nao ha clientes
+    down(mutex);
+    waiting = waiting - 1;
+    up(barbers);              // um barbeiro pronto
+    up(mutex);
+    cut_hair();               // fora da regiao critica
+} }
+void customer(void) {
+    down(mutex);
+    if (waiting < CHAIRS) {
+        waiting = waiting + 1;
+        up(customers);        // acorda o barbeiro se preciso
+        up(mutex);
+        down(barbers);        // espera sua vez
+        get_haircut();
+    } else {
+        up(mutex);            // cheio: vai embora
+    }
+}`,w:'<code>waiting</code> é a contagem em uma variável (para decidir se há cadeira) e <code>customers</code> é o mesmo número como semáforo (para o barbeiro dormir/acordar). <code>cut_hair()</code> fica <b>fora</b> da região crítica, senão ninguém mais poderia chegar.'},
+ {t:'Problema 7: filósofos glutões (três versões)',i:'Cinco filósofos, cinco garfos, cada um precisa dos dois garfos vizinhos para comer.',c:String.raw`// 1) Ingenua: DEADLOCK se todos pegam o garfo esquerdo ao mesmo tempo
+philosopher(i) { while (TRUE) {
+    think();
+    down(forks[i]);  down(forks[(i+1)%N]);
+    eat();
+    up(forks[i]);    up(forks[(i+1)%N]);
+} }
+
+// 2) Mutex global em volta dos dois down: sem deadlock, mas SEM paralelismo
+//    (um filosofo por vez pegando garfos; baixo desempenho)
+
+// 3) Por estados: pega os dois garfos ou nenhum
+void take_forks(int i) {
+    down(&mutex);
+    state[i] = HUNGRY;
+    test(i);
+    up(&mutex);
+    down(&s[i]);                 // bloqueia se nao pegou os garfos
+}
+void put_forks(int i) {
+    down(&mutex);
+    state[i] = THINKING;
+    test(LEFT);  test(RIGHT);    // os vizinhos podem comer agora?
+    up(&mutex);
+}
+void test(int i) {
+    if (state[i] == HUNGRY && state[LEFT] != EATING && state[RIGHT] != EATING) {
+        state[i] = EATING;
+        up(&s[i]);
+    }
+}`,w:'A versão 1 é deadlock clássico: as <b>4 condições</b> valem (garfo é exclusivo, cada um segura um e espera outro, ninguém tira o garfo, e a espera é circular). A versão 3 (<b>Tanenbaum</b>) quebra posse-e-espera. Repare: no slide o último filósofo usaria <code>forks[i+1]</code> com <i>i+1 = N</i> (fora do vetor); o correto é <code>(i+1)%N</code>.'}
+]);
+
+/* ---- laboratório: árvore de fork ---- */
+(function(){
+  const names=id=>'P'+id;
+  function draw(){
+    const prog=$('#fk-prog').value,n=Math.max(1,Math.min(prog==='all'?5:8,+$('#fk-n').value||1));
+    const t=forkTree(prog,n);
+    $('#fk-met').innerHTML=`<div class="metric"><b>${t.length}</b><span>processos no total</span></div><div class="metric"><b>${t.length-1}</b><span>filhos criados (fork bem-sucedidos)</span></div>`;
+    $('#fk-tab').innerHTML='<tr><th>Processo</th><th>Pai</th><th>i</th><th>child ID impresso</th></tr>'+t.map(p=>`<tr><td>${names(p.id)}</td><td>${p.parent<0?'shell':names(p.parent)}</td><td>${p.i}</td><td>${p.child===null?'0':names(p.child)}</td></tr>`).join('');
+    $('#fk-note').textContent=prog==='chain'?'Cadeia: cada processo é filho do anterior. A ordem de impressão não é garantida.':prog==='fan'?'Leque: todos os filhos têm o mesmo pai (P0). A ordem de impressão não é garantida.':prog==='fanwait'?'Leque com wait: P0 só imprime depois de todos os filhos; sua linha é a última.':'Sem break, os filhos também continuam o laço: o total dobra a cada iteração (2^n). O "child ID" depende de qual retorno do último fork cada processo viu; aqui aparece 0 só para simplificar.';
+  }
+  $('#fk-prog').onchange=draw;$('#fk-n').oninput=draw;draw();
+})();
+/* ---- laboratório: filósofos ---- */
+(function(){
+  const N=5;let st,fk,done;
+  function reset(){st=Array(N).fill(0);fk=Array(N).fill(-1);done=false;draw();}
+  function legal(i){const R=(i+1)%N;return st[i]===0?fk[i]===-1:st[i]===1?fk[R]===-1:true;}
+  function act(i){const R=(i+1)%N;if(!legal(i))return;
+    if(st[i]===0){fk[i]=i;st[i]=1;}else if(st[i]===1){fk[R]=i;st[i]=2;}else{fk[i]=-1;fk[R]=-1;st[i]=0;}draw();}
+  function draw(){
+    const lab=['pensa','garfo esq.','come'];
+    $('#ph-row').innerHTML=st.map((s,i)=>`<span class="st ${s?'on':''}">F${i}: ${lab[s]}</span>`).join('');
+    $('#ph-btn').innerHTML=st.map((s,i)=>`<button class="btn" data-i="${i}" ${legal(i)?'':'disabled'}>F${i}: ${s===0?'pega esquerdo':s===1?'pega direito':'solta garfos'}</button>`).join('');
+    const dead=st.every(s=>s===1);
+    $('#ph-msg').innerHTML=dead?'<b style="color:var(--bad)">DEADLOCK:</b> todos seguram o garfo esquerdo e esperam o direito (espera circular).':'<span style="color:var(--muted)">Dica: faça todos pegarem o garfo esquerdo antes de qualquer um pegar o direito.</span>';
+  }
+  $('#ph-btn').onclick=e=>{const b=e.target.closest('button');if(b)act(+b.dataset.i);};
+  $('#ph-rst').onclick=reset;
+  $('#ph-run').onclick=()=>{
+    const T=2000,out=[];
+    for(const [m,l] of [['naive','Ingênua'],['state','Por estados (test)']]){let d=0;for(let k=0;k<T;k++)if(philRun(m,N,30,Math.random).deadlock)d++;out.push([l,(d/T*100).toFixed(1)+'%']);}
+    $('#ph-res').innerHTML=out.map(o=>`<div class="metric"><b>${o[1]}</b><span>${o[0]}: execuções em deadlock</span></div>`).join('');
+  };
+  reset();
+})();
+/* ---- laboratório: Banker ---- */
+(function(){
+  const AV='3 3 2',AL='0 1 0\n2 0 0\n3 0 2\n2 1 1\n0 0 2',MX='7 5 3\n3 2 2\n9 0 2\n2 2 2\n4 3 3';
+  const rows=s=>s.trim().split('\n').map(l=>nums(l));
+  function draw(msg){
+    const av=nums($('#bk-av').value),al=rows($('#bk-al').value),mx=rows($('#bk-mx').value);
+    if(al.length!==mx.length||al.some(r=>r.length!==av.length)||mx.some(r=>r.length!==av.length)){$('#bk-out').innerHTML='<b style="color:var(--bad)">Matrizes com tamanhos diferentes.</b>';return;}
+    const r=bankerSafe(av,al,mx);
+    $('#bk-out').innerHTML=`<div class="scroll"><table class="t"><tr><th>Proc</th><th>Alocação</th><th>Máximo</th><th>Necessidade</th></tr>`+al.map((a,i)=>`<tr><td>P${i}</td><td>${a.join(' ')}</td><td>${mx[i].join(' ')}</td><td>${r.need[i].join(' ')}</td></tr>`).join('')+`</table></div><p style="margin-bottom:0">`+(r.safe?`<b style="color:var(--ok)">Estado seguro.</b> Sequência segura: ${r.seq.map(i=>'P'+i).join(' → ')}`:'<b style="color:var(--bad)">Estado inseguro</b> (nenhuma sequência segura).')+'</p>';
+    if(msg)$('#bk-msg').innerHTML=msg;
+  }
+  function reset(){$('#bk-av').value=AV;$('#bk-al').value=AL;$('#bk-mx').value=MX;$('#bk-msg').textContent='';draw();}
+  ['#bk-av','#bk-al','#bk-mx'].forEach(s=>$(s).oninput=()=>draw());
+  $('#bk-rst').onclick=reset;
+  $('#bk-go').onclick=()=>{
+    const av=nums($('#bk-av').value),al=rows($('#bk-al').value),mx=rows($('#bk-mx').value),i=+$('#bk-p').value,req=nums($('#bk-r').value);
+    if(!al[i]||req.length!==av.length){$('#bk-msg').innerHTML='<b style="color:var(--bad)">Processo ou vetor inválido.</b>';return;}
+    const r=bankerRequest(av,al,mx,i,req);
+    if(r.ok){
+      $('#bk-av').value=av.map((x,j)=>x-req[j]).join(' ');
+      al[i]=al[i].map((x,j)=>x+req[j]);$('#bk-al').value=al.map(x=>x.join(' ')).join('\n');
+      draw(`<b style="color:var(--ok)">Concedido a P${i}:</b> ${r.why}. As matrizes foram atualizadas.`);
+    }else $('#bk-msg').innerHTML=`<b style="color:var(--bad)">Pedido de P${i} negado:</b> ${r.why}.`;
+  };
+  reset();
+})();
+</script></body></html>
